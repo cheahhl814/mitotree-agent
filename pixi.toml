@@ -1,0 +1,33 @@
+[workspace]
+name = "mitotree-agent"
+version = "1.0.0"
+description = "Checkpointed, agent-driven mitogenome phylogenomics pipeline (multi-gene supermatrix: extract, align, trim, concatenate, species tree) with optional gene-tree concordance, ANI, and codon-usage branches. No divergence-time dating — unreliable from mitogenome data alone."
+channels = ["conda-forge", "bioconda"]
+platforms = ["linux-64"]
+# bioconda coverage for AMAS/iqtree/fastani is Linux-only; macOS is not supported.
+
+[dependencies]
+# Every tool here was confirmed via `pixi search` during preflight (status: found in params.json).
+mafft = "*"
+trimal = "*"
+amas = "*"
+iqtree = "*"
+gotree = "*"
+fastani = "*"
+r-ape = "*"
+r-getopt = "*"
+pandas = "*"
+numpy = "*"
+matplotlib = "*"  # ancillary/mitotree-ani heatmap (Python replacement for the original R/tidyverse/pheatmap script)
+scipy = "*"  # ancillary/mitotree-ani heatmap hierarchical clustering
+biopython = "*"  # ancillary/mitotree-codon-usage's calculate_rscu.py (Bio.SeqIO FASTA parsing)
+
+[tasks]
+# These are documentation entry points, not scripts — each sub-skill's SKILL.md has the
+# actual per-stage bash recipes for the agent to run directly. There is no wrapper script
+# to keep in sync.
+preflight = "echo 'See preflight/mitotree-preflight/SKILL.md for input validation steps.'"
+run = "echo 'See build/mitotree-builder/SKILL.md for the extract/align/trim/concat/tree/reroot stage recipes.'"
+qc = "echo 'See qc/mitotree-qc/SKILL.md for the run-summary generation steps.'"
+debug = "echo 'See debug/mitotree-debug/SKILL.md for the failure signature library.'"
+battle-test = "echo 'See battle-test/mitotree-battle-test/SKILL.md for the structural smoke tests.'"
