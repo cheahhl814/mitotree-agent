@@ -15,6 +15,9 @@ This is the **mitotree-agent** skill, built with the [bioinfo-skill-creator](htt
 | *opt.* | **Concordance** (gene-tree agreement) | Per-gene trees, RF distances vs. species tree, gCF/sCF concordance factors. Not gated — user-triggered after build. | `concordance/mitotree-concordance` | `$RUN_DIR/concordance/*` |
 | *opt.* | **ANI** (sample identity check) | Pairwise Average Nucleotide Identity via fastANI — flags near-identical/duplicate samples. Independent of the phylogenomics branch, can run any time after preflight. | `ancillary/mitotree-ani` | `$RUN_DIR/ani/*` |
 | *opt.* | **Codon Usage** (RSCU) | Relative synonymous codon usage per gene (nucleotide mode only). | `ancillary/mitotree-codon-usage` | `$RUN_DIR/codon_usage/*` |
+| *opt.* | **Prune** (curate taxa) | Drop misidentified/excluded taxa or match a reference pruned tree, via gotree. Not gated — user-triggered after build. | `prune/mitotree-prune` | `$RUN_DIR/pruned/species_tree_pruned.nwk` |
+| *opt.* | **Visualize — iTOL** (interactive annotation) | iTOL tip-label + colorstrip datasets for `build/species_tree.nwk` (already rooted — no separate reroot step needed). | `visualize/mitotree-itol` | `$RUN_DIR/itol/*` |
+| *opt.* | **Visualize — Render** (static figure) | Offline SVG/PDF/PNG tree figure via toytree, with support values. | `visualize/mitotree-render` | `$RUN_DIR/render/*` |
 
 ## When to Use This Skill
 
@@ -31,7 +34,7 @@ This is the **mitotree-agent** skill, built with the [bioinfo-skill-creator](htt
 
 ## Prerequisites
 
-- A pixi environment with the required tools: `mafft, trimal, amas, iqtree, gotree, fastani, r-ape, r-getopt, pandas, numpy, matplotlib, scipy, biopython` (+ `entrez-direct, vsearch, blast` if using the optional taxon-sampling stage).
+- A pixi environment with the required tools: `mafft, trimal, amas, iqtree, gotree, fastani, r-ape, r-getopt, pandas, numpy, matplotlib, scipy, biopython` (+ `entrez-direct, vsearch, blast` for taxon-sampling; `toytree, packaging` for `visualize/mitotree-render`), all optional stages.
 - MitoAnnotator `.tar.gz` archives and/or per-species gene FASTAs (`--fasta LABEL:FILE`), at least 1 sample source (≥4 samples recommended for a meaningful tree).
 
 ## Installation
@@ -80,6 +83,20 @@ python3 qc/mitotree-qc/scripts/qc_report.py "$RUN_DIR" --output-dir "$RUN_DIR"
 
 # Optional: codon usage / RSCU (nucleotide mode only)
 # See ancillary/mitotree-codon-usage/SKILL.md
+
+# Optional: prune the final tree to a curated taxon subset (after the build finishes)
+python3 prune/mitotree-prune/scripts/prune_tree.py "$RUN_DIR/build/species_tree.nwk" \
+    --exclude-file exclude_list.txt \
+    -o "$RUN_DIR/pruned/species_tree_pruned.nwk" \
+    --gotree-cmd "pixi run gotree"
+
+# Optional: iTOL interactive annotation datasets (already-rooted tree, no reroot step)
+python3 visualize/mitotree-itol/scripts/itol_tip_labels.py "$RUN_DIR/build/species_tree.nwk" \
+    -o "$RUN_DIR/itol/labels.txt" --gotree-cmd "pixi run gotree"
+
+# Optional: offline static figure (SVG/PDF/PNG) via toytree
+python3 visualize/mitotree-render/scripts/render_tree.py "$RUN_DIR/build/species_tree.nwk" \
+    -o "$RUN_DIR/render/species_tree"
 ```
 
 Each phase has explicit **Inputs/Outputs contract** at the top of its sub-skill SKILL.md. If the upstream artifact is missing, the sub-skill **must refuse to proceed** and tell the user which upstream step to run.
@@ -120,6 +137,17 @@ mitotree-agent/
 │   └── mitotree-codon-usage/             # Optional — RSCU codon usage (nt mode only)
 │       ├── SKILL.md
 │       └── scripts/
+├── prune/
+│   └── mitotree-prune/                   # Optional — curate taxa (gotree prune)
+│       ├── SKILL.md
+│       └── scripts/
+├── visualize/
+│   ├── mitotree-itol/                    # Optional — iTOL interactive annotation datasets
+│   │   ├── SKILL.md
+│   │   └── scripts/
+│   └── mitotree-render/                  # Optional — offline SVG/PDF/PNG figure (toytree)
+│       ├── SKILL.md
+│       └── scripts/
 ├── debug/
 │   └── mitotree-debug/SKILL.md           # Failure interpreter (signature library)
 ├── battle-test/
@@ -127,6 +155,7 @@ mitotree-agent/
 ├── docs-corpus/                          # Offline Markdown snapshot of upstream tool docs
 │   ├── mafft/ trimal/ iqtree/ gotree/    # reused from phylogenetics-agent (same tools)
 │   ├── entrez-direct/ vsearch/ blast/    # reused from phylogenetics-agent (same tools)
+│   ├── toytree/                          # reused from phylogenetics-agent (same tool)
 │   └── amas/ fastani/                    # new for this skill
 └── test_smoke.py                         # Skill-level structural smoke test
 ```

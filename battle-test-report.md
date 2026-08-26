@@ -110,3 +110,28 @@ Optional NCBI-retrieval stage, per user direction: fetch whole complete-mitogeno
 - [x] `preflight/mitotree-taxon-sampling/SKILL.md` (v1.0.0, 4 stop points, 5-row troubleshooting table including the `-task blastn` finding).
 - [x] Orchestrator `SKILL.md`, `README.md`, `battle-test/mitotree-battle-test/SKILL.md` updated; `pixi.toml` gained `entrez-direct`/`vsearch`/`blast`; `docs-corpus/{entrez-direct,vsearch,blast}` reused from `phylogenetics-agent`.
 - [x] Full structural re-check: all 10 `SKILL.md` files pass frontmatter, all 9 tools have docs-corpus entries, `pixi lock --dry-run` succeeds.
+
+## Addendum (2026-08-26, later same day): prune/mitotree-prune + visualize/mitotree-itol + visualize/mitotree-render ported
+
+User asked whether tree rooting to outgroup and visualization existed as in `phylogenetics-agent`. Rooting was already handled (`build/mitotree-builder`'s `reroot_tree.R` reroots at build time), but visualization (`phylo-itol`, `phylo-render`) and pruning (`phylo-prune`) were missing. User selected "port all three" via AskUserQuestion.
+
+**Design simplification vs. the `phylogenetics-agent` originals**: since `build/mitotree-builder` already writes a pre-rooted `build/species_tree.nwk`, neither `mitotree-itol` nor `mitotree-render` needs its own reroot step — unlike `phylo-itol`/`phylo-render`, which reroot themselves because `phylo-builder` doesn't. `--root-outgroup` in `mitotree-render` is documented as an optional override only.
+
+**Ported unchanged**: `itol_tip_labels.py`, `itol_colorstrip.py`, `prune_tree.py` (all fully generic Newick/gotree wrappers, no single-marker-specific logic).
+
+**Two real bugs found and fixed via live testing** against a real 8-taxon *Betta* supermatrix + species tree (built from the BLAST-extracted gene FASTAs from the taxon-sampling addendum, rooted on `Betta_apollon_LC433688`):
+
+1. **`ape::root(..., resolve.root=TRUE)` injects a literal `"Root"` node label** on the new root — the only non-numeric internal-node label in an otherwise all-numeric-support tree. Found via a minimal R reproduction. Fixed in `reroot_tree.R` by blanking `tree$node.label[1]` when it equals `"Root"`.
+2. **toytree's `internal_labels` auto-detection mis-fires whenever the root has a leaf tip as one of its two direct children** — exactly the topology produced by single-taxon-outgroup rerooting. `render_tree.py` silently parsed every numeric support value into the "name" column instead of "support", printing a false `WARNING: no support values found`. Diagnosed via a series of minimal hand-written Newick reproductions, isolating the root-has-a-leaf-tip-child topology as the trigger, independent of R/ape entirely. The `ape` "Root"-label fix above did *not* resolve this on its own — fixed separately by passing `internal_labels="support"` explicitly to `toytree.tree()` in `render_tree.py`. Re-verified on the real tree: support column correctly populated (100.0, 100.0, 100.0, 55.0, 80.0), no warning, figure rendered.
+
+**Live-tested against the real tree**:
+- `mitotree-itol`: `8 tips -> labels.txt`; colorstrip legend `Betta: 8 (#1f77b4)` — correct.
+- `mitotree-render`: warning gone, support labels render correctly after the fix.
+- `mitotree-prune`: excluded `Betta_smaragdina_MW292561` from the 8-taxon tree — report correctly showed `tips before: 8`, `tips after: 7`, `removed (1): Betta_smaragdina_MW292561`. (One test-harness-only issue along the way: bash process substitution `<(echo ...)` as an `--exclude-file` argument failed with `open /dev/fd/63: no such file or directory` — not a bug in `prune_tree.py`, gotree's subprocess just can't read that FD; fixed by writing to a real temp file.)
+
+**Completed**:
+- [x] `prune/mitotree-prune`, `visualize/mitotree-itol`, `visualize/mitotree-render` — SKILL.md written (v1.0.0 each), scripts ported/patched, live-tested end-to-end against a real tree.
+- [x] `pixi.toml` gained `toytree`, `packaging`; `pixi install` succeeded.
+- [x] `docs-corpus/toytree/` reused from `phylogenetics-agent`.
+- [x] Orchestrator `SKILL.md`, `README.md`, `battle-test/mitotree-battle-test/SKILL.md` updated (routing, follow-ups table, frontmatter/signature/docs-corpus loops, Pipeline Overview, Prerequisites, Usage, Repository Layout).
+- [x] Full structural re-check: all 13 `SKILL.md` files pass frontmatter, all 10 tools have docs-corpus entries, `pixi lock --dry-run` succeeds.

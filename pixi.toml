@@ -24,6 +24,8 @@ biopython = "*"  # ancillary/mitotree-codon-usage's calculate_rscu.py (Bio.SeqIO
 entrez-direct = "*"  # esearch/efetch for optional preflight/mitotree-taxon-sampling NCBI retrieval
 vsearch = "*"  # --cluster_fast near-duplicate collapse in mitotree-taxon-sampling
 blast = "*"  # blastn/makeblastdb for mitotree-taxon-sampling's BLAST-based gene extraction
+toytree = "*"  # visualize/mitotree-render offline SVG/PDF/PNG figure
+packaging = "*"  # toyplot's reportlab-based PNG export needs this; not pulled in transitively
 
 [tasks]
 # These are documentation entry points, not scripts — each sub-skill's SKILL.md has the

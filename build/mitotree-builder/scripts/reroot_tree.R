@@ -27,5 +27,16 @@ if (!opt$outgroup %in% tree$tip.label) {
 }
 
 tree <- root(tree, outgroup = opt$outgroup, resolve.root = TRUE)
+
+# ape's root(..., resolve.root=TRUE) labels the new root node literally "Root"
+# -- this is the only non-numeric internal-node label in an otherwise all-
+# numeric-support tree, which breaks toytree's support-vs-name column
+# detection downstream (verified live: it silently parsed every support value
+# into the "name" column instead, with support left NaN). Blank it so the
+# written tree has uniform (numeric-or-empty) internal labels.
+if (!is.null(tree$node.label) && length(tree$node.label) > 0 && tree$node.label[1] == "Root") {
+  tree$node.label[1] <- ""
+}
+
 write.tree(tree, file = opt$output)
 cat(sprintf("Tree re-rooted on '%s' -> %s\n", opt$outgroup, opt$output))

@@ -78,9 +78,11 @@ This orchestrator has **one** user-facing stop point (SP0). All other stop point
 | `preflight` | Invoke `preflight/mitotree-preflight`. Validates inputs, gene coverage, tool audit. Writes `preflight.md` + `params.json`. |
 | `build` | Invoke `build/mitotree-builder`. Extract → align → trim → concat → species tree → re-root, checkpointed (3 stages). |
 | `qc` | Invoke `qc/mitotree-qc`. Builds `qc-report.md` from `build/` + any optional branches already run. |
-| `qc-done` | Show the user `$RUN_DIR/qc-report.md`. If `concordance/mitotree-concordance`, `ancillary/mitotree-ani`, or `ancillary/mitotree-codon-usage` weren't run, offer them — then re-run `qc/mitotree-qc` to fold the new section in. |
+| `qc-done` | Show the user `$RUN_DIR/qc-report.md`. If `concordance/mitotree-concordance`, `ancillary/mitotree-ani`, or `ancillary/mitotree-codon-usage` weren't run, offer them — then re-run `qc/mitotree-qc` to fold the new section in. Also offer `prune/mitotree-prune`, `visualize/mitotree-itol`, or `visualize/mitotree-render`. |
 
 **`concordance/mitotree-concordance`, `ancillary/mitotree-ani`, and `ancillary/mitotree-codon-usage` are optional and user-triggered**, not part of the Preflight→Build→QC gate chain. Each can run any time after `build/mitotree-builder` completes (`checkpoints/tree.done.json` exists) — before or after `qc/mitotree-qc`. If run after `qc-report.md` already exists, re-run `qc/mitotree-qc` so its section is no longer "not found." They don't conflict with each other or gate one another. See their respective `SKILL.md` files.
+
+**`prune/mitotree-prune`, `visualize/mitotree-itol`, and `visualize/mitotree-render` are optional and user-triggered**, also not part of the gate chain. All three operate on `build/species_tree.nwk` — which `build/mitotree-builder` already roots on the outgroup, if one was set, so (unlike `phylogenetics-agent`'s equivalents) neither visualize sub-skill needs its own rerooting step. Run `mitotree-prune` first if the user wants the visualization built on a curated taxon subset instead of the full tree. Ported unchanged/lightly-adapted from `phylogenetics-agent`'s `prune/phylo-prune`, `visualize/phylo-itol`, `visualize/phylo-render` — see their respective `SKILL.md` files.
 
 **Do not skip preflight.** The preflight sub-skill computes evidence and writes `params.json` that the build sub-skill consumes.
 
@@ -162,6 +164,9 @@ The agent must stop and warn the user if:
 | "Check for duplicate/near-identical samples" / "ANI" | Invoke `ancillary/mitotree-ani` — writes `ani/fastani_results.tsv` + a heatmap, then re-run `qc/mitotree-qc`. |
 | "Codon usage" / "RSCU" | Invoke `ancillary/mitotree-codon-usage` (nucleotide mode only — meaningless on translated `aa`-mode input). |
 | "Add more taxa" / "pull mitogenomes from NCBI" / "expand the dataset" | Invoke `preflight/mitotree-taxon-sampling` *before* `preflight/mitotree-preflight` — writes `taxon_sampling/genes/*.genes.fasta` (ready as `--fasta LABEL:FILE` input), then hand off to the normal preflight gate. Needs an already-annotated reference sample on hand; ask for one (MitoAnnotator archive or a prior run's `build/01_per_gene/`) if not already clear from the request. |
+| "Prune the tree" / "remove these taxa" / "drop misidentified mitogenomes" | Invoke `prune/mitotree-prune` — writes `pruned/species_tree_pruned.nwk` + a report. Ask which mode (keep list / exclude list / match a reference tree) if not already clear from the request. |
+| "Visualize the tree" / "iTOL annotation" / "colorstrip" | Invoke `visualize/mitotree-itol` — writes `itol/labels.txt` (+ `colorstrip.txt`, `legend.md` if a grouping was given). Upload alongside `build/species_tree.nwk` at itol.embl.de. |
+| "Render a publication figure" / "export tree as PDF/SVG/PNG" | Invoke `visualize/mitotree-render` — writes `figures/species_tree.{svg,pdf,png}`. No italics (toyplot limitation) — use `mitotree-itol` instead if italic species names are required. |
 
 ## Verification
 
