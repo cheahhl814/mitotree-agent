@@ -94,3 +94,19 @@ Live-tested against two synthetic 4-sample datasets:
 ## Completed (addendum)
 
 - [x] `preflight/mitotree-preflight/scripts/preflight_check.py` written, live-tested (GO and NO-GO/SP5 paths), frontmatter/signature-library re-verified.
+
+## Addendum (2026-08-26, later same day): preflight/mitotree-taxon-sampling added
+
+Optional NCBI-retrieval stage, per user direction: fetch whole complete-mitogenome FASTA (not GenBank-annotation parsing, which was the original design sketch) and extract the 13 PCGs + 12S/16S via BLASTN against a reference gene set the user already has, inspired by `PHYLOGENETIC/scripts/blast_extract_cds.py` and `core_mito_phylo.py`.
+
+**Investigated live**:
+- `fetch_mitogenomes.py` (adapted from `phylogenetics-agent/preflight/phylo-taxon-sampling/scripts/taxon_sampling.py`) run against **real NCBI data** (`--expand-taxon "Betta"`, no mocking): 12 candidate complete-mitogenome records fetched, correctly deduplicated to 8 via `vsearch --cluster_fast` (RefSeq `NC_026581` preferred over byte-identical duplicate `AB571120`, both real *Betta splendens* accessions).
+- `blast_extract_genes.py` (trimmed from `blast_extract_cds.py` to just its BLASTN-extraction core; reference loading reuses `build_supermatrix.py`'s `genes_from_archive`/`genes_from_fasta` directly, no GFF3/GenBank-feature parsing needed) — first synthetic-data test passed cleanly (strand correction + ATG-trim verified on a fabricated 993bp genome with a reverse-complemented PCG).
+- **Real bug found and fixed via the real-data test**: running the full extraction against the 8 real fetched *Betta* genomes, using a real MitoAnnotator archive (`Betta_pi_BPI001.tar.gz`) as reference, initially showed most samples missing 6-10+ genes each. Root cause: `blastn`'s default `-task` is `megablast` (tuned for near-identical sequences) — a real Cytb hit at 78% identity was invisible to megablast but found immediately with `-task blastn`. Fixed by always passing `-task blastn` explicitly. Re-run after the fix: 7/8 samples extracted all 15/15 genes cleanly; the 8th missed only `ATPase8` (a short, fast-evolving gene) — a realistic biological result at real cross-species divergence, not a bug.
+
+**Completed**:
+- [x] `preflight/mitotree-taxon-sampling/scripts/fetch_mitogenomes.py` — live-tested against real NCBI data.
+- [x] `preflight/mitotree-taxon-sampling/scripts/blast_extract_genes.py` — live-tested against synthetic data and real fetched genomes + a real MitoAnnotator reference; `-task blastn` bug found and fixed.
+- [x] `preflight/mitotree-taxon-sampling/SKILL.md` (v1.0.0, 4 stop points, 5-row troubleshooting table including the `-task blastn` finding).
+- [x] Orchestrator `SKILL.md`, `README.md`, `battle-test/mitotree-battle-test/SKILL.md` updated; `pixi.toml` gained `entrez-direct`/`vsearch`/`blast`; `docs-corpus/{entrez-direct,vsearch,blast}` reused from `phylogenetics-agent`.
+- [x] Full structural re-check: all 10 `SKILL.md` files pass frontmatter, all 9 tools have docs-corpus entries, `pixi lock --dry-run` succeeds.

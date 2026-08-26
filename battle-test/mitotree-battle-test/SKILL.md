@@ -34,6 +34,7 @@ triggers:
 
 ```bash
 for f in SKILL.md preflight/mitotree-preflight/SKILL.md \
+         preflight/mitotree-taxon-sampling/SKILL.md \
          build/mitotree-builder/SKILL.md \
          qc/mitotree-qc/SKILL.md debug/mitotree-debug/SKILL.md \
          battle-test/mitotree-battle-test/SKILL.md \
@@ -55,11 +56,13 @@ done
 - `build/mitotree-builder` outputs `build/species_tree.nwk` → `qc/mitotree-qc` inputs list it. ✅
 - `qc/mitotree-qc` outputs `qc-report.md` → orchestrator's stage-detection ladder checks for it (`qc-done` stage). ✅
 - `concordance/mitotree-concordance` and `ancillary/mitotree-ani` outputs (`concordance/`, `ani/`) → `qc/mitotree-qc` inputs list them as optional. ✅
+- `preflight/mitotree-taxon-sampling` outputs `taxon_sampling/genes/*.genes.fasta` → consumable as `preflight/mitotree-preflight`'s `--fasta LABEL:FILE` input. ✅
 
 ### 3. Signature-library completeness
 
 ```bash
-for f in preflight/mitotree-preflight/SKILL.md build/mitotree-builder/SKILL.md \
+for f in preflight/mitotree-preflight/SKILL.md preflight/mitotree-taxon-sampling/SKILL.md \
+         build/mitotree-builder/SKILL.md \
          qc/mitotree-qc/SKILL.md debug/mitotree-debug/SKILL.md \
          concordance/mitotree-concordance/SKILL.md \
          ancillary/mitotree-ani/SKILL.md ancillary/mitotree-codon-usage/SKILL.md; do
@@ -71,7 +74,7 @@ done
 ### 4. Docs-corpus freshness
 
 ```bash
-for tool in mafft trimal amas iqtree gotree fastani; do
+for tool in mafft trimal amas iqtree gotree fastani entrez-direct vsearch blast; do
     d="docs-corpus/$tool"
     [ -f "$d/README.md" ] || { echo "$tool: MISSING README.md — FAIL"; continue; }
     if [ -f "$d/cli-reference.md" ] || [ -f "$d/github-readme.md" ] || [ -f "$d/web-docs.md" ]; then
@@ -113,10 +116,10 @@ Only run when explicitly requested. Uses the same 4-taxon/3-gene synthetic FASTA
 
 ## Verification
 
-- [ ] All 9 `SKILL.md` files have valid frontmatter.
-- [ ] Contract wiring verified for all phase transitions, including the optional concordance/ANI branches.
+- [ ] All 10 `SKILL.md` files have valid frontmatter.
+- [ ] Contract wiring verified for all phase transitions, including the optional concordance/ANI/taxon-sampling branches.
 - [ ] All non-orchestrator sub-skills have ≥ 3 signature-library rows.
-- [ ] All 6 tools have a populated `docs-corpus/<tool>/`.
+- [ ] All 9 tools have a populated `docs-corpus/<tool>/`.
 - [ ] `pixi lock --dry-run` succeeds.
 - [ ] `git status` reported (informational, not blocking unless the user asked for a clean commit).
 

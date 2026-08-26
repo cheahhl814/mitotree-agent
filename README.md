@@ -8,6 +8,7 @@ This is the **mitotree-agent** skill, built with the [bioinfo-skill-creator](htt
 
 | # | Phase | Goal | Sub-Skill | Artifact produced |
 |:---|:---|:---|:---|:---|
+| *opt.* | **Taxon Sampling** (broaden dataset) | Fetch whole complete-mitogenome FASTA from NCBI, then BLASTN-extract PCGs+rRNA against a reference gene set the user already has. Not gated — user-triggered, before preflight. | `preflight/mitotree-taxon-sampling` | `$RUN_DIR/taxon_sampling/genes/*.genes.fasta` |
 | **1** | **Preflight** (The Audit) | Validate inputs, gene coverage, tool availability. | `preflight/mitotree-preflight` | `$RUN_DIR/preflight.md` + `$RUN_DIR/params.json` |
 | **2** | **Build** (The Workflow) | Extract PCGs+rRNA → align (mafft) → trim (trimAl) → concatenate (AMAS) → species tree (IQ-TREE) → re-root (ape). | `build/mitotree-builder` | `$RUN_DIR/build/species_tree.nwk` |
 | **3** | **QC** (The Report) | Build the final report: supermatrix stats, UFBoot support, and any optional-branch results. | `qc/mitotree-qc` | `$RUN_DIR/qc-report.md` |
@@ -30,7 +31,7 @@ This is the **mitotree-agent** skill, built with the [bioinfo-skill-creator](htt
 
 ## Prerequisites
 
-- A pixi environment with the required tools: `mafft, trimal, amas, iqtree, gotree, fastani, r-ape, r-getopt, pandas, numpy`.
+- A pixi environment with the required tools: `mafft, trimal, amas, iqtree, gotree, fastani, r-ape, r-getopt, pandas, numpy, matplotlib, scipy, biopython` (+ `entrez-direct, vsearch, blast` if using the optional taxon-sampling stage).
 - MitoAnnotator `.tar.gz` archives and/or per-species gene FASTAs (`--fasta LABEL:FILE`), at least 1 sample source (≥4 samples recommended for a meaningful tree).
 
 ## Installation
@@ -45,6 +46,19 @@ pixi add --manifest-path /path/to/mitotree-agent/pixi.toml
 ## Usage
 
 ```bash
+# Optional: broaden the dataset with more mitogenomes from NCBI (before Phase 1)
+python3 preflight/mitotree-taxon-sampling/scripts/fetch_mitogenomes.py \
+    --expand-taxon "Betta" --outgroup-taxon "Macropodus opercularis" \
+    -o "$RUN_DIR/taxon_sampling/raw" \
+    --summary-out "$RUN_DIR/taxon_sampling/summary.csv" \
+    --metadata-out "$RUN_DIR/taxon_sampling/metadata.csv" \
+    --esearch-cmd "pixi run esearch" --efetch-cmd "pixi run efetch" --vsearch-cmd "pixi run vsearch"
+python3 preflight/mitotree-taxon-sampling/scripts/blast_extract_genes.py \
+    --targets-dir "$RUN_DIR/taxon_sampling/raw" \
+    --reference-archive /path/to/a/MitoAnnotator/archive.tar.gz \
+    -o "$RUN_DIR/taxon_sampling/genes" \
+    --blastn-cmd "pixi run blastn" --makeblastdb-cmd "pixi run makeblastdb"
+
 # Phase 1: Preflight
 RUN_DIR=/path/to/run
 pixi run preflight
@@ -78,6 +92,11 @@ mitotree-agent/
 ├── README.md                             # This file
 ├── pixi.toml                             # Pixi env: mafft, trimal, amas, iqtree, gotree, fastani, r-ape, r-getopt, pandas, numpy
 ├── preflight/
+│   ├── mitotree-taxon-sampling/           # Optional — broaden dataset via NCBI + BLASTN gene extraction
+│   │   ├── SKILL.md
+│   │   └── scripts/
+│   │       ├── fetch_mitogenomes.py
+│   │       └── blast_extract_genes.py
 │   └── mitotree-preflight/SKILL.md       # Phase 1 — input + gene-coverage validation
 ├── build/
 │   └── mitotree-builder/
@@ -107,6 +126,7 @@ mitotree-agent/
 │   └── mitotree-battle-test/SKILL.md     # Structural smoke tests
 ├── docs-corpus/                          # Offline Markdown snapshot of upstream tool docs
 │   ├── mafft/ trimal/ iqtree/ gotree/    # reused from phylogenetics-agent (same tools)
+│   ├── entrez-direct/ vsearch/ blast/    # reused from phylogenetics-agent (same tools)
 │   └── amas/ fastani/                    # new for this skill
 └── test_smoke.py                         # Skill-level structural smoke test
 ```

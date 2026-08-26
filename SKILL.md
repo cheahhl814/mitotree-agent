@@ -86,6 +86,8 @@ This orchestrator has **one** user-facing stop point (SP0). All other stop point
 
 **Do not add a dating stage.** See "Do NOT use this skill" above and `preflight/mitotree-preflight` SP3 — this is a deliberate, explained scope exclusion, not a missing feature to fill in later.
 
+**`preflight/mitotree-taxon-sampling` is optional and user-triggered**, invoked *before* `preflight/mitotree-preflight` when the user wants the dataset broadened with more taxa from NCBI. Fetches whole complete-mitogenome FASTA (most NCBI submissions aren't split into per-gene records), then BLASTN-extracts the 13 PCGs + 12S/16S against a reference gene set from the user's own already-annotated data (a prior run's `build/01_per_gene/`, or a MitoAnnotator archive) — it does not bypass `mitotree-preflight`'s own validation. Requires at least one already-annotated sample on hand to serve as the reference. See `preflight/mitotree-taxon-sampling/SKILL.md`.
+
 ### 0.4 The run command
 
 ```bash
@@ -159,6 +161,7 @@ The agent must stop and warn the user if:
 | "Check gene-tree concordance" / "gCF/sCF" / "RF distances" | Invoke `concordance/mitotree-concordance` — writes `concordance/rf_distances.tsv` + `concordance.cf.stat`, then re-run `qc/mitotree-qc` to fold it in. |
 | "Check for duplicate/near-identical samples" / "ANI" | Invoke `ancillary/mitotree-ani` — writes `ani/fastani_results.tsv` + a heatmap, then re-run `qc/mitotree-qc`. |
 | "Codon usage" / "RSCU" | Invoke `ancillary/mitotree-codon-usage` (nucleotide mode only — meaningless on translated `aa`-mode input). |
+| "Add more taxa" / "pull mitogenomes from NCBI" / "expand the dataset" | Invoke `preflight/mitotree-taxon-sampling` *before* `preflight/mitotree-preflight` — writes `taxon_sampling/genes/*.genes.fasta` (ready as `--fasta LABEL:FILE` input), then hand off to the normal preflight gate. Needs an already-annotated reference sample on hand; ask for one (MitoAnnotator archive or a prior run's `build/01_per_gene/`) if not already clear from the request. |
 
 ## Verification
 
