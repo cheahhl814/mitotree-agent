@@ -78,3 +78,19 @@ Two sub-skills were delegated to Pi agents running in parallel herdr panes (`pi`
 - [x] `docs-corpus/` populated for all 6 tools (4 reused, 2 new).
 - [x] `README.md`, `pixi.toml`, `.gitignore` written.
 - [x] Structural battle-test: `PASS`.
+
+## Addendum (2026-08-26, later same day): mitotree-preflight given a real script
+
+The user noticed `preflight/mitotree-preflight/scripts/` was empty — a real gap: unlike every other phase, `mitotree-preflight`'s Procedure section only had inline one-liners and a hand-wavy "if a bespoke dry-run flag doesn't exist yet..." note for gene-coverage checking, with no actual script ever written.
+
+**Fixed**: `scripts/preflight_check.py` now does the tool audit, source discovery, and gene-coverage dry-run for real — by importing `discover_archives`/`parse_fasta_specs`/`step_extract` directly from `build_supermatrix.py` rather than reimplementing them, so preflight's coverage numbers are guaranteed identical to what the build phase will see.
+
+**Investigated live, per the user's follow-up**: the user pointed out this dry-run is valuable specifically because most mitogenomes retrieved from NCBI lack gene annotation (a single whole-sequence FASTA record per sample, not per-gene records). Built and added **SP5**: when every gene shows `0/n` across every sample, this is a distinct `NO-GO` signature from ordinary partial coverage gaps (SP1) — the pipeline extracts genes by header-name matching and does not annotate raw genomes, so a fully-zero coverage table means the input needs MitoAnnotator (or similar) run first, not a partial-sample/partial-gene fix.
+
+Live-tested against two synthetic 4-sample datasets:
+- Per-gene FASTAs (12S/16S/Cytb headers) → `GO`, 100% coverage.
+- Whole-sequence "raw mitogenome" FASTAs (headers like `taxA_complete_mitogenome`, no gene-name match) → `NO-GO` via SP5, with the exact "this looks like whole, unannotated mitogenome FASTA(s)... run MitoAnnotator first" explanation written into `preflight.md`.
+
+## Completed (addendum)
+
+- [x] `preflight/mitotree-preflight/scripts/preflight_check.py` written, live-tested (GO and NO-GO/SP5 paths), frontmatter/signature-library re-verified.
