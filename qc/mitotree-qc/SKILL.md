@@ -15,34 +15,34 @@ triggers:
 
 ### Inputs
 
-| Path | Source | Required? |
-| --- | --- | --- |
-| `$RUN_DIR/build/species_tree.nwk` + `build/05_stats/*.txt` | `build/mitotree-builder` | yes |
+| Path                                                            | Source                             | Required?                                  |
+| --------------------------------------------------------------- | ---------------------------------- | ------------------------------------------ |
+| `$RUN_DIR/build/species_tree.nwk` + `build/05_stats/*.txt`      | `build/mitotree-builder`           | yes                                        |
 | `$RUN_DIR/concordance/rf_distances.tsv` + `concordance.cf.stat` | `concordance/mitotree-concordance` | no — section reports "not found" if absent |
-| `$RUN_DIR/ani/fastani_results.tsv` | `ancillary/mitotree-ani` | no — section reports "not found" if absent |
+| `$RUN_DIR/ani/fastani_results.tsv`                              | `ancillary/mitotree-ani`           | no — section reports "not found" if absent |
 
 ### Outputs
 
-| Path | Format |
-| --- | --- |
-| `$RUN_DIR/run_summary.json` | JSON, machine-readable |
-| `$RUN_DIR/run_summary.txt` | Text, human-readable, includes a `gotree draw text` ASCII tree |
-| `$RUN_DIR/qc-report.md` | Markdown wrapper the orchestrator's stage-detection ladder checks for |
+| Path                        | Format                                                                |
+| --------------------------- | --------------------------------------------------------------------- |
+| `$RUN_DIR/run_summary.json` | JSON, machine-readable                                                |
+| `$RUN_DIR/run_summary.txt`  | Text, human-readable, includes a `gotree draw text` ASCII tree        |
+| `$RUN_DIR/qc-report.md`     | Markdown wrapper the orchestrator's stage-detection ladder checks for |
 
 ## 0.5 Ask-User Stop Points
 
 ### SP1 — Optional branches not run
 
-| Trigger | Evidence | Action |
-| --- | --- | --- |
+| Trigger                                         | Evidence                                 | Action                                                                                                                                                                                                            |
+| ----------------------------------------------- | ---------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `concordance/` and/or `ani/` directories absent | `qc_report.py`'s per-section "not found" | **Recommend, don't block**: mention in the handoff which optional branches weren't run and how to add them, but still produce `qc-report.md` from what's available — QC should never be gated on optional stages. |
 
 **Auto-pick when**: always — this is informational only, never a stop.
 
 ### SP2 — QC flags raised (exit code 1)
 
-| Trigger | Evidence | Action |
-| --- | --- | --- |
+| Trigger                                                                                                                     | Evidence                             | Action                                                                                                                                                                                   |
+| --------------------------------------------------------------------------------------------------------------------------- | ------------------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `qc_report.py` exits 1 (low UFBoot support, RF outlier genes, misleading gCF/sCF nodes, or near-identical (>99%) ANI pairs) | `run_summary.txt`'s `[WARN]` markers | Surface each `[WARN]` section to the user with the concrete node/gene/pair named — don't just say "QC flagged issues," name them (mirrors `phylo-qc`'s interpretation-layer convention). |
 
 **Auto-pick when**: exit code 0 → report clean, no flags to surface.
@@ -66,12 +66,12 @@ Then wrap `run_summary.txt` into `qc-report.md` (Markdown headers + the same con
 
 ## Troubleshooting — Signature library
 
-| Signature | Likely cause | Fix |
-| --- | --- | --- |
-| `not found: .../build/species_tree.nwk` | `build/mitotree-builder` hasn't completed, or ran with a different `$RUN_DIR` | Check `checkpoints/reroot.done.json` exists first. |
-| `no support values found in species_tree.nwk` | Tree was built without bootstrap (`-B` omitted per SP2 in `mitotree-builder`) | Expected on very small taxon sets where bootstrap was intentionally skipped — not an error, `species_tree` section will just be sparse. |
-| `(gotree not found on PATH...)` in the ASCII-tree section | `qc_report.py` invoked outside the pixi env | Run via `pixi run python3 qc/mitotree-qc/scripts/qc_report.py ...`, or ensure `gotree` resolves on PATH. |
-| `KeyError` on `No_of_taxa` / `Alignment_length` columns | AMAS output format changed between versions, or `supermatrix_stats.txt` is truncated/corrupt | Re-run `build/mitotree-builder` Step 1; check `amas --version`. |
+| Signature                                                 | Likely cause                                                                                 | Fix                                                                                                                                     |
+| --------------------------------------------------------- | -------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------- |
+| `not found: .../build/species_tree.nwk`                   | `build/mitotree-builder` hasn't completed, or ran with a different `$RUN_DIR`                | Check `checkpoints/reroot.done.json` exists first.                                                                                      |
+| `no support values found in species_tree.nwk`             | Tree was built without bootstrap (`-B` omitted per SP2 in `mitotree-builder`)                | Expected on very small taxon sets where bootstrap was intentionally skipped — not an error, `species_tree` section will just be sparse. |
+| `(gotree not found on PATH...)` in the ASCII-tree section | `qc_report.py` invoked outside the pixi env                                                  | Run via `pixi run python3 qc/mitotree-qc/scripts/qc_report.py ...`, or ensure `gotree` resolves on PATH.                                |
+| `KeyError` on `No_of_taxa` / `Alignment_length` columns   | AMAS output format changed between versions, or `supermatrix_stats.txt` is truncated/corrupt | Re-run `build/mitotree-builder` Step 1; check `amas --version`.                                                                         |
 
 ## Verification
 

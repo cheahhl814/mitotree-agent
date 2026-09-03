@@ -91,7 +91,7 @@ python3 ancillary/mitotree-ani/scripts/prepare_ani_input.py \
 ### 2. Run fastANI
 
 ```bash
-cd /home/cheahhl814/claude_workspace/bioinformatics/AIx-BIO/skills/mitotree-agent
+cd <mitotree-agent-install-path>
 
 pixi run fastANI \
     --ql "$run_dir/ani/genome_list.txt" \

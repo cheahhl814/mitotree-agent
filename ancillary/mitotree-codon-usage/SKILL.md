@@ -71,7 +71,7 @@ Use this when you want to:
 
 ### 1. Copy the script from the Nextflow reference
 
-The script `/home/cheahhl814/claude_workspace/bioinformatics/PHYLOGENETIC/MitoTree/bin/calculate_rscu.py` is copied into `scripts/calculate_rscu.py` as-is — it has no MitoTree-specific hardcoded assumptions and is directly reusable.
+The script `bin/calculate_rscu.py` from the original MitoTree repository is copied into `scripts/calculate_rscu.py` as-is — it has no MitoTree-specific hardcoded assumptions and is directly reusable.
 
 ### 2. Run RSCU calculation per gene
 

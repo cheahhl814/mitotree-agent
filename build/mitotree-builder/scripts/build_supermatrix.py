@@ -39,6 +39,7 @@ Example
 """
 
 import argparse
+import os
 import sys
 import tarfile
 import subprocess
@@ -63,9 +64,12 @@ DEFAULT_NT_GENE_ORDER = DEFAULT_RRNA_ORDER + DEFAULT_PCG_ORDER
 # aa mode: PCGs only (rRNAs are not translated)
 DEFAULT_AA_GENE_ORDER = DEFAULT_PCG_ORDER
 
-# AMAS.py search order (first found is used)
+# AMAS.py search order (first found is used; AMAS is bundled by mitotree-agent's pixi env
+# so this is normally auto-resolved via the env's bin path).
 AMAS_SEARCH_PATHS = [
-    "/home/cheahhl814/.pixi/envs/amas/bin/AMAS.py",
+    os.environ.get("AMAS_PY_PATH", ""),  # override via env var if AMAS isn't on PATH
+    "/usr/local/bin/AMAS.py",            # common system path
+    "AMAS.py",                           # fallback: rely on PATH (resolved by shutil.which below)
 ]
 
 # ─── Vertebrate mitochondrial genetic code (NCBI table 2) ────────────────────

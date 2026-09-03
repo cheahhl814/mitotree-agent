@@ -18,6 +18,7 @@ triggers:
 ## When to Use This Skill
 
 Use after `build/mitotree-builder` has produced `build/species_tree.nwk` and per-gene trimmed alignments (`build/03_trimmed/*.trim.fasta`), when the user wants to:
+
 - Assess how much individual gene trees disagree with the species tree (RF distances).
 - Calculate gene concordance factors (gCF) and site concordance factors (sCF) for each internal branch.
 - Identify outlier genes whose topologies are strongly discordant (potential paralogs, misannotations, or alignment artifacts).
@@ -28,44 +29,44 @@ Do NOT use this to **fix** discordance — it's a diagnostic stage. High RF or l
 
 ### Inputs
 
-| Path | Source | Required? |
-| --- | --- | --- |
-| `$RUN_DIR/build/species_tree.nwk` | `build/mitotree-builder` | yes |
-| `$RUN_DIR/build/03_trimmed/<gene>.trim.fasta` | `build/mitotree-builder` | yes (≥1 gene) |
+| Path                                               | Source                   | Required?                 |
+| -------------------------------------------------- | ------------------------ | ------------------------- |
+| `$RUN_DIR/build/species_tree.nwk`                  | `build/mitotree-builder` | yes                       |
+| `$RUN_DIR/build/03_trimmed/<gene>.trim.fasta`      | `build/mitotree-builder` | yes (≥1 gene)             |
 | `$RUN_DIR/build/04_concatenated/supermatrix.fasta` | `build/mitotree-builder` | yes (for sCF calculation) |
 
 ### Outputs
 
-| Path | Format | Notes |
-| --- | --- | --- |
-| `$RUN_DIR/concordance/gene_trees.nwk` | Newick (one line per gene) | IQ-TREE gene trees (`-m MFP -B 1000 -T 1 --quiet`) |
-| `$RUN_DIR/concordance/rf_distances.tsv` | TSV, header row | Column 0 = gene name, column `normalised_rf` (exact name, hardcoded in qc_report.py) |
-| `$RUN_DIR/concordance/concordance.cf.tree` | Newick | Species tree with gCF/sCF node labels |
-| `$RUN_DIR/concordance/concordance.cf.branch` | TSV | Per-branch concordance statistics |
-| `$RUN_DIR/concordance/concordance.cf.stat` | TSV, `#`-commented | Overall run summary; columns include `ID`, `Label` (UFBoot), `gCF`, `sCF` |
+| Path                                         | Format                     | Notes                                                                                |
+| -------------------------------------------- | -------------------------- | ------------------------------------------------------------------------------------ |
+| `$RUN_DIR/concordance/gene_trees.nwk`        | Newick (one line per gene) | IQ-TREE gene trees (`-m MFP -B 1000 -T 1 --quiet`)                                   |
+| `$RUN_DIR/concordance/rf_distances.tsv`      | TSV, header row            | Column 0 = gene name, column `normalised_rf` (exact name, hardcoded in qc_report.py) |
+| `$RUN_DIR/concordance/concordance.cf.tree`   | Newick                     | Species tree with gCF/sCF node labels                                                |
+| `$RUN_DIR/concordance/concordance.cf.branch` | TSV                        | Per-branch concordance statistics                                                    |
+| `$RUN_DIR/concordance/concordance.cf.stat`   | TSV, `#`-commented         | Overall run summary; columns include `ID`, `Label` (UFBoot), `gCF`, `sCF`            |
 
 ## 0.5 Ask-User Stop Points
 
 ### SP1 — Concordance on a tiny taxon set
 
-| Trigger | Evidence | Action |
-| --- | --- | --- |
+| Trigger                                | Evidence                   | Action                                                                                                                                                                                                                                                                                                                         |
+| -------------------------------------- | -------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
 | `params.json.sample_labels` length < 5 | Taxon count from preflight | **Recommend**: gCF/sCF/RF values on <5 taxa are statistically thin (verified live: a 4-taxon synthetic run produced a single internal node's worth of signal — expected, not a bug). Ask: "(A) proceed anyway (output will be well-formed, just not biologically informative), (B) skip concordance until more taxa are added" |
 
 **Auto-pick when**: ≥5 samples → proceed, no ask.
 
 ### SP2 — Gene tree inference fails for one gene
 
-| Trigger | Evidence | Action |
-| --- | --- | --- |
+| Trigger                                          | Evidence                                                      | Action                                                                                                                                                                                                                           |
+| ------------------------------------------------ | ------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | IQ-TREE exits nonzero on one `<gene>.trim.fasta` | IQ-TREE stderr (e.g. "ERROR: no parsimony-informative sites") | That gene's alignment is too short/too conserved for tree inference. Ask: "(A) skip this gene and continue with the rest, (B) drop it from the analysis entirely (re-run build without it), (C) investigate the alignment first" |
 
 **Auto-pick when**: all genes infer successfully. No ask.
 
 ### SP3 — Overwrite existing concordance output
 
-| Trigger | Evidence | Action |
-| --- | --- | --- |
+| Trigger                                                                         | Evidence                              | Action                                                                                      |
+| ------------------------------------------------------------------------------- | ------------------------------------- | ------------------------------------------------------------------------------------------- |
 | `$RUN_DIR/concordance/rf_distances.tsv` or `concordance.cf.stat` already exists | A previous concordance run is present | Ask before overwriting: "(A) overwrite, (B) write to a new subdir (e.g. `concordance_v2/`)" |
 
 **Auto-pick when**: no existing concordance outputs. No ask.
@@ -101,6 +102,7 @@ python3 concordance/mitotree-concordance/scripts/compute_concordance.py \
 ```
 
 This wrapper:
+
 - Parses the multi-line `gene_trees.nwk` file (one Newick per gene).
 - For each gene tree: prunes the species tree to the gene tree's tip set via `gotree prune -c <gene_tree>`.
 - Runs `gotree compare trees -i <pruned_species> -c <gene_tree> --rf` to get raw RF.
@@ -125,6 +127,7 @@ pixi run iqtree -t "$run_dir/build/species_tree.nwk" \
 ```
 
 IQ-TREE writes:
+
 - `concordance.cf.tree` — species tree with gCF/sCF node labels.
 - `concordance.cf.branch` — per-branch statistics (TSV).
 - `concordance.cf.stat` — overall summary; tab-separated with `#`-prefixed comment lines, columns including `ID`, `Label` (UFBoot), `gCF`, `sCF`.
@@ -139,14 +142,14 @@ IQ-TREE writes:
 
 ## Troubleshooting — Signature library
 
-| Signature | Likely cause | Fix |
-| --- | --- | --- |
-| `ERROR: no parsimony-informative sites` (IQ-TREE on one gene) | That gene's trimmed alignment is too short or too conserved for tree inference | Skip that gene (SP2), or drop it from the build and re-run with fewer genes. |
-| `gotree: command not found` | Script invoked without `--gotree-cmd "pixi run gotree"` outside an activated pixi shell | Always pass `--gotree-cmd`, or run inside `pixi shell`. |
-| `normalised_rf` column missing or named differently | Wrapper wrote a different column name | The wrapper must write `normalised_rf` exactly — qc_report.py's `parse_rf_distances()` hardcodes this name. |
-| IQ-TREE `--gcf` fails with "gene trees file not found" | `gene_trees.nwk` path wrong or empty | Check Step 1 completed; `gene_trees.nwk` should have one Newick line per gene. |
-| `concordance.cf.stat` has no `gCF`/`sCF` columns | IQ-TREE invoked without `--scf 100` or `--gcf` | Verify Step 3 command matches the Procedure exactly. |
-| RF distances all zero | Gene trees are identical to the species tree (rare on real data, common on tiny synthetic test data) | Expected on 4-taxon synthetic datasets with one possible unrooted topology — not a bug. |
+| Signature                                                     | Likely cause                                                                                         | Fix                                                                                                         |
+| ------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------- |
+| `ERROR: no parsimony-informative sites` (IQ-TREE on one gene) | That gene's trimmed alignment is too short or too conserved for tree inference                       | Skip that gene (SP2), or drop it from the build and re-run with fewer genes.                                |
+| `gotree: command not found`                                   | Script invoked without `--gotree-cmd "pixi run gotree"` outside an activated pixi shell              | Always pass `--gotree-cmd`, or run inside `pixi shell`.                                                     |
+| `normalised_rf` column missing or named differently           | Wrapper wrote a different column name                                                                | The wrapper must write `normalised_rf` exactly — qc_report.py's `parse_rf_distances()` hardcodes this name. |
+| IQ-TREE `--gcf` fails with "gene trees file not found"        | `gene_trees.nwk` path wrong or empty                                                                 | Check Step 1 completed; `gene_trees.nwk` should have one Newick line per gene.                              |
+| `concordance.cf.stat` has no `gCF`/`sCF` columns              | IQ-TREE invoked without `--scf 100` or `--gcf`                                                       | Verify Step 3 command matches the Procedure exactly.                                                        |
+| RF distances all zero                                         | Gene trees are identical to the species tree (rare on real data, common on tiny synthetic test data) | Expected on 4-taxon synthetic datasets with one possible unrooted topology — not a bug.                     |
 
 ## Verification
 
