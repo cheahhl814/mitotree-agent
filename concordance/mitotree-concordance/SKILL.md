@@ -1,8 +1,8 @@
 ---
 name: mitotree-concordance
-description: 'Assess gene-tree/species-tree concordance: infer per-gene trees (IQ-TREE, -m MFP -B 1000), compute Robinson-Foulds distances (gotree compare trees --rf, normalized per gene), and calculate gCF/sCF concordance factors (IQ-TREE --gcf/--scf). Writes concordance/rf_distances.tsv + concordance.cf.stat for qc/mitotree-qc. Triggers: "gene tree concordance", "check concordance factors", "gCF/sCF", "RF distances", "mitotree-concordance".'
-version: 1.0.0
-updated: "2026-08-26"
+description: 'Assess gene-tree/species-tree concordance: infer per-gene trees (IQ-TREE, -m MFP -B 1000), compute Robinson-Foulds distances (gotree compare trees --rf, normalized per gene), and calculate gCF/sCF concordance factors (IQ-TREE --gcf/--scf). Writes concordance/rf_distances.tsv + concordance.cf.stat optionally plot a gCF-vs-sCF scatter figure, and write concordance_scatter.pdf/.png. Outputs feed qc/mitotree-qc. Triggers: "gene tree concordance", "check concordance factors", "gCF/sCF", "concordance scatter", "RF distances", "mitotree-concordance".'
+version: 1.1.0
+updated: "2026-09-08"
 triggers:
   - "gene tree concordance"
   - "check concordance factors"
@@ -44,6 +44,7 @@ Do NOT use this to **fix** discordance — it's a diagnostic stage. High RF or l
 | `$RUN_DIR/concordance/concordance.cf.tree`   | Newick                     | Species tree with gCF/sCF node labels                                                |
 | `$RUN_DIR/concordance/concordance.cf.branch` | TSV                        | Per-branch concordance statistics                                                    |
 | `$RUN_DIR/concordance/concordance.cf.stat`   | TSV, `#`-commented         | Overall run summary; columns include `ID`, `Label` (UFBoot), `gCF`, `sCF`            |
+| `$RUN_DIR/concordance/concordance_scatter.pdf` + `.png` | Figure (optional, user-triggered) | gCF-vs-sCF scatter — one point per internal branch, UFBoot-category colour, 33% random-expectation reference lines, node labels |
 
 ## 0.5 Ask-User Stop Points
 
@@ -132,6 +133,28 @@ IQ-TREE writes:
 - `concordance.cf.branch` — per-branch statistics (TSV).
 - `concordance.cf.stat` — overall summary; tab-separated with `#`-prefixed comment lines, columns including `ID`, `Label` (UFBoot), `gCF`, `sCF`.
 
+### 4. Optional: gCF-vs-sCF scatter plot (user-triggered)
+
+Matplotlib port of the manuscript `Fig4_concordance_scatter.R` (the pixi env has no ggplot2; same Python-replacement convention as `ancillary/mitotree-ani`'s heatmap):
+
+```bash
+# Auto-label the N most discordant nodes (lowest gCF, then sCF)
+pixi run python3 concordance/mitotree-concordance/scripts/plot_concordance_scatter.py \
+    "$RUN_DIR/concordance/concordance.cf.stat" \
+    -o "$RUN_DIR/concordance/concordance_scatter" --label-nodes 3
+
+# Or manual clade labels: generate the template, fill it in, re-run
+pixi run python3 concordance/mitotree-concordance/scripts/plot_concordance_scatter.py \
+    "$RUN_DIR/concordance/concordance.cf.stat" \
+    -o "$RUN_DIR/concordance/concordance_scatter" --labels-template-out "$RUN_DIR/concordance/scatter_labels.tsv"
+# ... edit scatter_labels.tsv (node_id<TAB>clade_label) ...
+pixi run python3 concordance/mitotree-concordance/scripts/plot_concordance_scatter.py \
+    "$RUN_DIR/concordance/concordance.cf.stat" \
+    -o "$RUN_DIR/concordance/concordance_scatter" --labels-tsv "$RUN_DIR/concordance/scatter_labels.tsv"
+```
+
+Writes `concordance_scatter.pdf` + `.png`. Live-verified against the real Betta waseri-complex dataset (`Figure_4_data/concordance.cf.stat`, 14 nodes): node values match the R original exactly; greedy label placement keeps every label inside the axes without overlap.
+
 ## Interpretation Guidelines
 
 - **normalised_rf ≈ 0**: gene tree topology matches the species tree exactly (on the shared tip set).
@@ -157,6 +180,7 @@ IQ-TREE writes:
 - [ ] `$RUN_DIR/concordance/rf_distances.tsv` parses (`head` shows header + rows, `normalised_rf` column present).
 - [ ] `$RUN_DIR/concordance/concordance.cf.stat` parses (comment lines starting with `#`, data rows with `ID`, `Label`, `gCF`, `sCF` columns).
 - [ ] Re-run `qc/mitotree-qc` to fold the concordance section into `qc-report.md`.
+- [ ] If the scatter was requested: `concordance_scatter.pdf`/`.png` exist and the console table's node values match `concordance.cf.stat`.
 
 ## What NOT to do
 
@@ -166,4 +190,4 @@ IQ-TREE writes:
 
 ## Handoff
 
-> Concordance complete. `concordance/rf_distances.tsv` + `concordance.cf.stat` written. `<N>` genes evaluated, `<M>` outlier genes (normalised_rf > median + 2×IQR), `<K>` misleading nodes (UFBoot≥95 but gCF<50 or sCF<33). Re-run `qc/mitotree-qc` to fold these sections into `qc-report.md`.
+> Concordance complete. `concordance/rf_distances.tsv` + `concordance.cf.stat` written. `<N>` genes evaluated, `<M>` outlier genes (normalised_rf > median + 2×IQR), `<K>` misleading nodes (UFBoot≥95 but gCF<50 or sCF<33). Re-run `qc/mitotree-qc` to fold these sections into `qc-report.md`. Offer the gCF-vs-sCF scatter (step 4) if a manuscript-style figure would help.
