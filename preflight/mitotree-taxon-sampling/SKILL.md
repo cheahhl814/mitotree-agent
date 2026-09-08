@@ -1,8 +1,8 @@
 ---
 name: mitotree-taxon-sampling
-description: 'Broaden a mitotree-agent dataset by fetching whole complete-mitogenome sequences from NCBI (same genus/family/etc.) plus an optional outgroup, then BLASTN-extract the 13 PCGs + 12S/16S rRNA against a reference gene set from the user''s own already-annotated data. Triggers: "add more mitogenomes", "pull mitogenomes from NCBI", "expand the mitotree dataset", "mitotree-taxon-sampling".'
-version: 1.0.0
-updated: "2026-08-26"
+description: 'Broaden a mitotree-agent dataset by fetching whole complete-mitogenome sequences from NCBI (same genus/family/etc., primary GenBank submissions only — RefSeq records excluded) plus an optional outgroup, then BLASTN-extract the 13 PCGs + 12S/16S rRNA against a reference gene set from the user''s own already-annotated data. Triggers: "add more mitogenomes", "pull mitogenomes from NCBI", "expand the mitotree dataset", "mitotree-taxon-sampling".'
+version: 1.1.0
+updated: "2026-09-08"
 triggers:
   - "add more mitogenomes"
   - "pull mitogenomes from NCBI"
@@ -13,7 +13,9 @@ triggers:
 
 # mitotree-taxon-sampling
 
-> **v1.0.0.** Optional stage of `mitotree-agent`, run before `preflight/mitotree-preflight`. Two scripts: `fetch_mitogenomes.py` (NCBI retrieval, adapted from `phylogenetics-agent`'s `taxon_sampling.py`) and `blast_extract_genes.py` (BLASTN gene extraction, trimmed down from `PHYLOGENETIC/scripts/blast_extract_cds.py` to just its core homology-extraction logic, reference-loading reused directly from `build_supermatrix.py`).
+> **v1.1.0.** Optional stage of `mitotree-agent`, run before `preflight/mitotree-preflight`. Two scripts: `fetch_mitogenomes.py` (NCBI retrieval, adapted from `phylogenetics-agent`'s `taxon_sampling.py`) and `blast_extract_genes.py` (BLASTN gene extraction, trimmed down from `PHYLOGENETIC/scripts/blast_extract_cds.py` to just its core homology-extraction logic, reference-loading reused directly from `build_supermatrix.py`).
+>
+> **Primary-submission-only (v1.1.0):** RefSeq records (`NC_`/`NG_`-style accessions) are **excluded**, not preferred. The esearch query carries `NOT srcdb_refseq[PROP]` and a post-fetch guard drops any straggler, logging it in `metadata.csv` with `drop_reason=refseq_excluded`. When a primary submission and its byte-identical RefSeq mirror both exist, the **primary accession is the one kept**. Type material still outranks ordinary primary submissions in the quality ranking.
 
 ## When to Use This Skill
 
@@ -90,7 +92,7 @@ python3 preflight/mitotree-taxon-sampling/scripts/fetch_mitogenomes.py \
     --esearch-cmd "pixi run esearch" --efetch-cmd "pixi run efetch" --vsearch-cmd "pixi run vsearch"
 ```
 
-Live-verified against real NCBI data (`--expand-taxon "Betta"`, no network mocking): 12 candidate records fetched, correctly deduplicated to 8 (RefSeq preferred over a byte-identical non-RefSeq duplicate via `vsearch --cluster_fast`).
+Live-verified against real NCBI data (`--expand-taxon "Betta"`, no network mocking): 12 candidate records fetched → **9 kept after the `NOT srcdb_refseq[PROP]` exclusion (3 RefSeq records dropped)**; all 9 kept accessions are primary GenBank submissions (AB/KR/LC/MT/MW/OQ/PX prefixes, zero `XX_`-style RefSeq accessions). Previously (v1.0.0) the behavior was the opposite — RefSeq was preferred over a byte-identical non-RefSeq duplicate.
 
 ### 2. Extract genes via BLASTN against a reference
 
@@ -134,6 +136,7 @@ Live-verified against the 8 real fetched *Betta* genomes from step 1, using a re
 
 - Do **not** fall back to fetching GenBank-format annotations and parsing their own CDS/rRNA features — that was the original design and was deliberately dropped in favor of BLASTN extraction against the user's own reference, per explicit user direction, since it reuses this project's own already-working `blast_extract_cds.py`/`core_mito_phylo.py` logic instead of a new GenBank-feature parser.
 - Do **not** omit `-task blastn` from the BLASTN call — the default `megablast` task silently misses real cross-species gene homologs (verified live).
+- Do **not** re-add a RefSeq preference or remove the `NOT srcdb_refseq[PROP]` filter / the post-fetch `is_refseq` guard — primary-submission-only retrieval is the deliberate v1.1.0 contract (a byte-identical RefSeq mirror must never win over the primary accession it duplicates).
 
 ## Handoff
 
