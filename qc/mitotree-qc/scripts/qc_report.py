@@ -120,6 +120,13 @@ def parse_species_tree(results_dir: Path) -> dict:
     if not vals:
         return {"error": "no support values found in species_tree.nwk"}
 
+    # Normalize support scale: fraction-encoded trees carry 0–1 support
+    # fractions, percent-encoded trees (IQ-TREE .treefile/.contree — this
+    # pipeline's normal input) carry 0–100. Detect the scale (max <= 1 =>
+    # fractions) and rescale to percent before thresholding/formatting.
+    if max(vals) <= 1.0:
+        vals = [v * 100.0 for v in vals]
+
     below_95 = [v for v in vals if v < 95]
     below_70 = [v for v in vals if v < 70]
     return {

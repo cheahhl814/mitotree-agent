@@ -1,8 +1,8 @@
 ---
 name: mitotree-qc
 description: 'Build the final mitotree-agent run report: supermatrix stats, species-tree UFBoot support, and (if present) gene-tree RF distances, gCF/sCF concordance factors, and ANI — from build/mitotree-builder + optional concordance/ani branches. Writes qc-report.md + run_summary.json/.txt. Triggers: internal — invoked by mitotree-agent orchestrator only.'
-version: 1.0.0
-updated: "2026-08-26"
+version: 1.0.1
+updated: "2026-09-08"
 triggers:
   - "mitotree qc"
 ---
@@ -83,6 +83,7 @@ Then wrap `run_summary.txt` into `qc-report.md` (Markdown headers + the same con
 
 - Do **not** treat a missing optional branch (concordance/ANI) as a QC failure — only the flags computed from data that *is* present should affect the verdict.
 - Do **not** collapse `[WARN]` sections into a bare count in the user-facing summary — name the specific node/gene/pair, matching `phylo-qc`'s existing interpretation-layer precedent (see `phylogenetics-agent/qc/phylo-qc/SKILL.md`).
+- **Support-scale (v1.0.1)**: `species_tree.nwk` support values are auto-normalized — fraction-encoded trees (0–1, e.g. RAxML-NG `.supportTBE`-style Newicks) are rescaled ×100 before the 95/70 threshold checks; percent-encoded trees (IQ-TREE `.treefile`/`.contree`, this pipeline's normal output) pass through unchanged. If support means ever print as "0.5" for a clearly 50%-supported tree, the input is fraction-encoded and this normalization has been reverted or bypassed.
 
 ## Handoff
 
