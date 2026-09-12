@@ -2,7 +2,7 @@
 
 > **v1.0.0.** Checkpointed, agent-driven mitogenome phylogenomics pipeline (extract, align, trim, concatenate, tree, re-root) with optional gene-tree concordance, ANI, and codon-usage branches. No divergence-time dating — mitogenome-only data does not reliably calibrate node ages.
 
-This is the **mitotree-agent** skill, built with the [bioinfo-skill-creator](https://github.com/cheahhl814/bioinfo-skill-creator) meta-skill, ported from the `MitoTree` Nextflow pipeline (`PHYLOGENETIC/MitoTree/main.nf` + `bin/`).
+This is the **mitotree-agent** skill, built with the [bioinfo-skill-creator](https://github.com/cheahhl814/bioinfo-skill-creator) meta-skill, ported from the `MitoTree` Nextflow pipeline (`main.nf` + `bin/`).
 
 ## Pipeline Overview
 
