@@ -1,8 +1,8 @@
 ---
 name: mitotree-agent
 description: Agentic mitogenome phylogenomics pipeline (multi-gene supermatrix -- extract PCGs+rRNA, align, trim, concatenate, species tree) with optional gene-tree concordance, ANI, and codon-usage branches. Rebuilt from the MitoTree Nextflow pipeline as a checkpointed BettaMt-pattern skill. Deliberately excludes divergence-time dating (MCMCtree/PAML) -- unreliable from mitogenome-only data.
-version: 1.0.0
-updated: "2026-08-26"
+version: 1.1.0
+updated: "2026-10-05"
 triggers:
   - "mitogenome phylogenomics"
   - "mitotree"
@@ -182,3 +182,13 @@ After this orchestrator routes the user to a phase, the agent should explicitly 
 ## Provenance
 
 Rebuilt with the [bioinfo-skill-creator](https://github.com/cheahhl814/bioinfo-skill-creator) meta-skill from the `MitoTree` Nextflow pipeline (`PHYLOGENETIC/MitoTree/main.nf` + `bin/`), following the same pattern as `phylogenetics-agent`. Divergence-time dating (MCMCtree/PAML, OrthoFinder orthology inference was investigated and confirmed absent from the source pipeline — genes are extracted by fixed name, not inferred orthology) was deliberately dropped during the port.
+
+
+## Dependencies → biodb-fetch (shared data lake)
+
+Consumes [biodb-fetch](https://github.com/cheahhl814/biodb-fetch) v1.0.0 (deployed at `~/.agents/skills/biodb-fetch/`) for mitogenome phylogenomics — mitogenome/marker record retrieval from NCBI:
+
+- `scripts/ncbi_fetch.py fetch --db nucleotide --uids <ids> --rettype fasta` (+ `search` for query discovery) — rate-limit owned, store dedup across runs
+
+- **Shared store + contract v2**: payloads land in biodb-fetch's content-addressed `store/` (md5 `.sha256` sidecars); repeat requests return `cache=hit` in the `manifest.tsv` (accession/source/url/path/md5/retrieval_date/tool/format/contract_version/cache) — zero re-download across skills/batches; `--refresh` re-pulls; never parse biodb-fetch internals.
+- **Degradation**: biodb-fetch unavailable (not deployed / offline / preflight NO-GO) → proceed exactly as before with user-supplied files; note the deviation in the run report.
