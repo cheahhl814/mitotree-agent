@@ -28,6 +28,8 @@ toytree = "*"  # visualize/mitotree-render offline SVG/PDF/PNG figure
 packaging = "*"  # toyplot's reportlab-based PNG export needs this; not pulled in transitively
 
 [tasks]
+# See bin/skill-update-check.py for the verdict legend (UP-TO-DATE / BEHIND-BY-N / OFFLINE).
+update-check = "python3 bin/skill-update-check.py"
 # These are documentation entry points, not scripts — each sub-skill's SKILL.md has the
 # actual per-stage bash recipes for the agent to run directly. There is no wrapper script
 # to keep in sync.
