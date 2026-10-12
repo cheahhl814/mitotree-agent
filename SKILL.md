@@ -1,8 +1,8 @@
 ---
 name: mitotree-agent
 description: Agentic mitogenome phylogenomics pipeline (multi-gene supermatrix -- extract PCGs+rRNA, align, trim, concatenate, species tree) with optional gene-tree concordance, ANI, and codon-usage branches. Rebuilt from the MitoTree Nextflow pipeline as a checkpointed BettaMt-pattern skill. Deliberately excludes divergence-time dating (MCMCtree/PAML) -- unreliable from mitogenome-only data.
-version: 1.1.0
-updated: "2026-10-05"
+version: 1.1.1
+updated: "2026-10-12"
 triggers:
   - "mitogenome phylogenomics"
   - "mitotree"
@@ -181,7 +181,7 @@ After this orchestrator routes the user to a phase, the agent should explicitly 
 
 ## Provenance
 
-Rebuilt with the [bioinfo-skill-creator](https://github.com/cheahhl814/bioinfo-skill-creator) meta-skill from the `MitoTree` Nextflow pipeline (`PHYLOGENETIC/MitoTree/main.nf` + `bin/`), following the same pattern as `phylogenetics-agent`. Divergence-time dating (MCMCtree/PAML, OrthoFinder orthology inference was investigated and confirmed absent from the source pipeline — genes are extracted by fixed name, not inferred orthology) was deliberately dropped during the port.
+Rebuilt with the [skill-forge](https://github.com/cheahhl814/bioinfo-skill-creator) meta-skill from the `MitoTree` Nextflow pipeline (`PHYLOGENETIC/MitoTree/main.nf` + `bin/`), following the same pattern as `phylogenetics-agent`. Divergence-time dating (MCMCtree/PAML, OrthoFinder orthology inference was investigated and confirmed absent from the source pipeline — genes are extracted by fixed name, not inferred orthology) was deliberately dropped during the port.
 
 
 ## Dependencies → biodb-fetch (shared data lake)
