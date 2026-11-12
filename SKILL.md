@@ -10,6 +10,7 @@ triggers:
   - "build a mitogenome tree"
   - "gene concordance factors"
   - "mitotree agent"
+disable-model-invocation: true
 ---
 
 # MitoTree Agent

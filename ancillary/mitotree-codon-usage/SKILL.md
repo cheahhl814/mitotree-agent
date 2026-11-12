@@ -8,6 +8,7 @@ triggers:
   - "RSCU"
   - "codon bias"
   - "mitotree-codon-usage"
+disable-model-invocation: true
 ---
 
 # mitotree-codon-usage

@@ -9,6 +9,7 @@ triggers:
   - "duplicate samples"
   - "ANI heatmap"
   - "mitotree-ani"
+disable-model-invocation: true
 ---
 
 # mitotree-ani

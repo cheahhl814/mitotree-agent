@@ -7,6 +7,7 @@ triggers:
   - "battle-test mitotree-agent"
   - "mitotree-battle-test"
   - "is the mitotree skill ready"
+disable-model-invocation: true
 ---
 
 # mitotree-battle-test

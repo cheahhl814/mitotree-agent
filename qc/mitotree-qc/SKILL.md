@@ -5,6 +5,7 @@ version: 1.0.1
 updated: "2026-09-08"
 triggers:
   - "mitotree qc"
+disable-model-invocation: true
 ---
 
 # mitotree-qc

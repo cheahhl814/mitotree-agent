@@ -9,6 +9,7 @@ triggers:
   - "gCF/sCF"
   - "RF distances"
   - "mitotree-concordance"
+disable-model-invocation: true
 ---
 
 # mitotree-concordance

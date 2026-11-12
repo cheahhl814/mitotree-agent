@@ -9,6 +9,7 @@ triggers:
   - "expand the mitotree dataset"
   - "fetch mitogenomes"
   - "mitotree-taxon-sampling"
+disable-model-invocation: true
 ---
 
 # mitotree-taxon-sampling

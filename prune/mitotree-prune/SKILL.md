@@ -9,6 +9,7 @@ triggers:
   - "drop misidentified mitogenomes"
   - "exclude these sequences from the mitotree"
   - "mitotree-prune"
+disable-model-invocation: true
 ---
 
 # mitotree-prune

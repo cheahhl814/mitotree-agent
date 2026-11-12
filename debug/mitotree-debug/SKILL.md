@@ -7,6 +7,7 @@ triggers:
   - "mitotree failed"
   - "why did the mitotree build error"
   - "debug mitotree"
+disable-model-invocation: true
 ---
 
 # mitotree-debug

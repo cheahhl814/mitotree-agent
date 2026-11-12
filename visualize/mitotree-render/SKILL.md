@@ -9,6 +9,7 @@ triggers:
   - "export mitotree as PDF"
   - "export mitotree as SVG"
   - "mitotree-render"
+disable-model-invocation: true
 ---
 
 # mitotree-render

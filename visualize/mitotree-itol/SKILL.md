@@ -9,6 +9,7 @@ triggers:
   - "colorstrip"
   - "style the tree labels"
   - "mitotree-itol"
+disable-model-invocation: true
 ---
 
 # mitotree-itol

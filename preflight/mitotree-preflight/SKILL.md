@@ -5,6 +5,7 @@ version: 1.0.0
 updated: "2026-08-26"
 triggers:
   - "mitotree preflight"
+disable-model-invocation: true
 ---
 
 # mitotree-preflight
