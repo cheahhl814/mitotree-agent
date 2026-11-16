@@ -1,8 +1,8 @@
 ---
 name: mitotree-qc
 description: 'Build the final mitotree-agent run report: supermatrix stats, species-tree UFBoot support, and (if present) gene-tree RF distances, gCF/sCF concordance factors, and ANI — from build/mitotree-builder + optional concordance/ani branches. Writes qc-report.md + run_summary.json/.txt. Triggers: internal — invoked by mitotree-agent orchestrator only.'
-version: 1.0.1
-updated: "2026-09-08"
+version: 1.2.0
+updated: "2026-11-16"
 triggers:
   - "mitotree qc"
 disable-model-invocation: true
@@ -10,7 +10,7 @@ disable-model-invocation: true
 
 # mitotree-qc
 
-> **v1.0.0.** Phase 3 of `mitotree-agent`. Wraps `qc_report.py` (live-verified: gracefully reports "not found" per section when the optional `concordance/`/`ani/` branches weren't run, rather than failing the whole report).
+> Phase 3 of `mitotree-agent`. Wraps `qc_report.py` (live-verified: gracefully reports "not found" per section when the optional `concordance/`/`ani/` branches weren't run, rather than failing the whole report).
 
 ## 0. Inputs / Outputs contract
 

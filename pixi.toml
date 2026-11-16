@@ -1,6 +1,6 @@
 [workspace]
 name = "mitotree-agent"
-version = "1.0.0"
+version = "1.2.0"
 description = "Checkpointed, agent-driven mitogenome phylogenomics pipeline (multi-gene supermatrix: extract, align, trim, concatenate, species tree) with optional gene-tree concordance, ANI, and codon-usage branches. No divergence-time dating — unreliable from mitogenome data alone."
 channels = ["conda-forge", "bioconda"]
 platforms = ["linux-64"]

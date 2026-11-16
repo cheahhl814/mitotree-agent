@@ -1,8 +1,8 @@
 ---
 name: mitotree-itol
 description: 'Generate iTOL (itol.embl.de) annotation datasets from the final tree produced by build/mitotree-builder: italic tip-label styling (always) and a colorstrip grouping taxa by genus/clade/any user-defined grouping (when a group source is given). Unlike phylogenetics-agent''s phylo-itol, no separate reroot step is needed here -- build/mitotree-builder already writes a rerooted species_tree.nwk. Tip names come from gotree stats tips, not regex Newick parsing. Triggers: "visualize the mitotree", "iTOL annotation", "colorstrip", "mitotree-itol".'
-version: 1.0.0
-updated: "2026-08-26"
+version: 1.2.0
+updated: "2026-11-16"
 triggers:
   - "visualize the mitotree"
   - "iTOL annotation"
@@ -14,7 +14,7 @@ disable-model-invocation: true
 
 # mitotree-itol
 
-> **v1.0.0.** Optional visualization phase of `mitotree-agent`, run after `qc/mitotree-qc` (or any time after `build/mitotree-builder` completes). Ported from `phylogenetics-agent/visualize/phylo-itol` — the wrapper scripts (`itol_tip_labels.py`, `itol_colorstrip.py`) are generic Newick-tree tools, copied unchanged. **Simplified vs. the original**: `phylo-itol` reroots on the outgroup itself (`gotree reroot outgroup`) because `phylo-builder` doesn't root its tree. `mitotree-builder` already does that rooting at build time (its own `reroot_tree.R` step) and writes the result straight to `build/species_tree.nwk` — so this sub-skill just points at that file directly, no separate reroot step.
+> Optional visualization phase of `mitotree-agent`, run after `qc/mitotree-qc` (or any time after `build/mitotree-builder` completes). Ported from `phylogenetics-agent/visualize/phylo-itol` — the wrapper scripts (`itol_tip_labels.py`, `itol_colorstrip.py`) are generic Newick-tree tools, copied unchanged. **Simplified vs. the original**: `phylo-itol` reroots on the outgroup itself (`gotree reroot outgroup`) because `phylo-builder` doesn't root its tree. `mitotree-builder` already does that rooting at build time (its own `reroot_tree.R` step) and writes the result straight to `build/species_tree.nwk` — so this sub-skill just points at that file directly, no separate reroot step.
 
 ## When to Use This Skill
 

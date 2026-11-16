@@ -1,8 +1,8 @@
 ---
 name: mitotree-concordance
 description: 'Assess gene-tree/species-tree concordance: infer per-gene trees (IQ-TREE, -m MFP -B 1000), compute Robinson-Foulds distances (gotree compare trees --rf, normalized per gene), and calculate gCF/sCF concordance factors (IQ-TREE --gcf/--scf). Writes concordance/rf_distances.tsv + concordance.cf.stat optionally plot a gCF-vs-sCF scatter figure, and write concordance_scatter.pdf/.png. Outputs feed qc/mitotree-qc. Triggers: "gene tree concordance", "check concordance factors", "gCF/sCF", "concordance scatter", "RF distances", "mitotree-concordance".'
-version: 1.1.0
-updated: "2026-09-08"
+version: 1.2.0
+updated: "2026-11-16"
 triggers:
   - "gene tree concordance"
   - "check concordance factors"
@@ -14,7 +14,7 @@ disable-model-invocation: true
 
 # mitotree-concordance
 
-> **v1.0.0.** Optional post-build stage of `mitotree-agent`, run after `build/mitotree-builder` completes (`checkpoints/tree.done.json` exists). Wraps IQ-TREE for gene-tree inference and concordance-factor calculation, and gotree for Robinson-Foulds distance computation — no hand-rolled Newick parsing needed, since gotree already handles tree comparison correctly and IQ-TREE natively outputs gCF/sCF in the exact format `qc/mitotree-qc/scripts/qc_report.py` expects.
+> Optional post-build stage of `mitotree-agent`, run after `build/mitotree-builder` completes (`checkpoints/tree.done.json` exists). Wraps IQ-TREE for gene-tree inference and concordance-factor calculation, and gotree for Robinson-Foulds distance computation — no hand-rolled Newick parsing needed, since gotree already handles tree comparison correctly and IQ-TREE natively outputs gCF/sCF in the exact format `qc/mitotree-qc/scripts/qc_report.py` expects.
 
 ## When to Use This Skill
 

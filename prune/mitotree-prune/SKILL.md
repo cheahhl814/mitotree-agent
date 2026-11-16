@@ -1,8 +1,8 @@
 ---
 name: mitotree-prune
 description: 'Prune the final tree from build/mitotree-builder down to a curated subset of taxa -- keep list, exclude list, or diff against a reference pruned tree -- via gotree prune, preserving branch lengths and support values. Ported unchanged from phylogenetics-agent''s prune/phylo-prune (a generic Newick-tree wrapper). Triggers: "prune the mitotree", "remove these taxa", "drop misidentified mitogenomes", "mitotree-prune".'
-version: 1.0.0
-updated: "2026-08-26"
+version: 1.2.0
+updated: "2026-11-16"
 triggers:
   - "prune the mitotree"
   - "remove these taxa"
@@ -14,7 +14,7 @@ disable-model-invocation: true
 
 # mitotree-prune
 
-> **v1.0.0.** Optional stage of `mitotree-agent`, run after `build/mitotree-builder` (before or alongside `visualize/mitotree-itol` / `visualize/mitotree-render`, both of which can consume the pruned tree instead of `build/species_tree.nwk`). `scripts/prune_tree.py` is copied unchanged from `phylogenetics-agent/prune/phylo-prune` — it's a generic `gotree prune` wrapper with no single-marker-specific logic, so it works on `build/species_tree.nwk` exactly as it did on `phylo-builder`'s output.
+> Optional stage of `mitotree-agent`, run after `build/mitotree-builder` (before or alongside `visualize/mitotree-itol` / `visualize/mitotree-render`, both of which can consume the pruned tree instead of `build/species_tree.nwk`). `scripts/prune_tree.py` is copied unchanged from `phylogenetics-agent/prune/phylo-prune` — it's a generic `gotree prune` wrapper with no single-marker-specific logic, so it works on `build/species_tree.nwk` exactly as it did on `phylo-builder`'s output.
 
 ## When to Use This Skill
 

@@ -1,15 +1,15 @@
 # mitotree-agent
 
-[![Version](https://img.shields.io/badge/version-1.0.0-blue)](#-installation)
+[![Version](https://img.shields.io/badge/version-1.2.0-blue)](#-installation)
 [![Type](https://img.shields.io/badge/type-agent%20skill-blueviolet)](#-installation)
-[![Built with](https://img.shields.io/badge/built%20with-bioinfo--skill--creator-orange)](https://github.com/cheahhl814/bioinfo-skill-creator)
+[![Built with](https://img.shields.io/badge/built%20with-skill--forge-orange)](https://github.com/cheahhl814/skill-forge)
 
-Agentic mitogenome phylogenomics pipeline (multi-gene supermatrix -- extract PCGs+rRNA, align, trim, concatenate, species tree) with optional gene-tree concordance, ANI, and codon-usage branches. Rebuilt from the MitoTree Nextflow pipeline as a checkpointed BettaMt-pattern skill. Deliberately excludes divergence-time dating (MCMCtree/PAML) -- unreliable from mitogenome-only data.
+Agentic mitogenome phylogenomics pipeline (multi-gene supermatrix — extract PCGs+rRNA, align, trim, concatenate, species tree) with optional gene-tree concordance, ANI, and codon-usage branches. Rebuilt from the MitoTree Nextflow pipeline as a checkpointed BettaMt-pattern skill. Deliberately excludes divergence-time dating (MCMCtree/PAML) — unreliable from mitogenome-only data.
 
 **Repository**: https://github.com/cheahhl814/mitotree-agent
 
 > [!NOTE]
-> Current version: **v1.0.0** (updated 2026-08-26).
+> Current version: **v1.2.0** (updated 2026-11-16).
 
 ## Contents
 
@@ -21,6 +21,7 @@ Agentic mitogenome phylogenomics pipeline (multi-gene supermatrix -- extract PCG
 - [Repository layout](#-repository-layout)
 - [Hard guarantees](#-hard-guarantees)
 - [Provenance](#-provenance)
+- [License](#-license)
 
 ## 🚀 Installation
 
@@ -46,7 +47,7 @@ pixi install
 ```
 
 > [!TIP]
-> `pixi install` resolves every pinned tool from `pixi.toml` (channels: conda-forge, bioconda) into an isolated `.pixi/` environment — no system-wide installs, no version conflicts with other skills.
+> `pixi install` resolves every tool from `pixi.toml` (channels: conda-forge, bioconda) into an isolated `.pixi/` environment. The exact resolved versions are pinned in the committed `pixi.lock`, so a fresh clone reproduces the tested toolchain. Platform coverage is `linux-64` only — bioconda does not carry all of AMAS/IQ-TREE/fastANI for macOS.
 
 ## 💡 Usage
 
@@ -74,7 +75,7 @@ pixi run preflight   # Phase 1 — validate inputs, write preflight.md + params.
 pixi run run         # Phase 2 — execute the workflow (after preflight ≥ GO)
 pixi run qc          # Phase 3 — build the final report (after run completes)
 pixi run debug       # On failure — interpret stderr via the signature library
-pixi run battle-test # Verify the skill's structural integrity
+pixi run battle-test # Structural quality gate (skill maintenance)
 ```
 
 > [!IMPORTANT]
@@ -82,44 +83,55 @@ pixi run battle-test # Verify the skill's structural integrity
 
 ## 🔬 Pipeline overview
 
-The analysis follows a phased evidence chain. Each phase consumes the artifacts of the previous phase and gates progression with a Go/No-Go check.
+![mitotree-agent pipeline metro map](docs/metro-map.svg)
 
-| # | Phase | Goal | Sub-skill | Artifact produced |
-|:--|:------|:-----|:----------|:------------------|
-| **1** | **Ancillary** | **v1.0.0.** Optional ancillary branch of `mitotree-agent`, run any time after `preflight/mitotree-preflight` (before or | `ancillary/` | `$RUN_DIR/ancillary-artifact.md` |
-| **2** | **Build** | **v1.0.0.** Phase 2 of `mitotree-agent`. Wraps `build_supermatrix.py` (extract → align → trim → concat → stats, live-ver | `build/` | `$RUN_DIR/run-summary.md` |
-| **3** | **Concordance** | **v1.0.0.** Optional post-build stage of `mitotree-agent`, run after `build/mitotree-builder` completes (`checkpoints/tr | `concordance/` | `$RUN_DIR/concordance-artifact.md` |
-| **4** | **Debug** | **v1.0.0.** Cross-phase failure interpreter for `mitotree-agent`. Each phase sub-skill has its own local signature libra | `debug/` | `$RUN_DIR/debug-report.md` |
-| **5** | **Preflight** | **v1.0.0.** Phase 1 of `mitotree-agent`. Validates the mitogenome gene-set inputs and tool availability before the expen | `preflight/` | `$RUN_DIR/preflight.md` |
-| **6** | **Prune** | **v1.0.0.** Optional stage of `mitotree-agent`, run after `build/mitotree-builder` (before or alongside `visualize/mitot | `prune/` | `$RUN_DIR/prune-artifact.md` |
-| **7** | **Qc** | **v1.0.0.** Phase 3 of `mitotree-agent`. Wraps `qc_report.py` (live-verified: gracefully reports "not found" per section | `qc/` | `$RUN_DIR/qc-summary.md` |
-| **8** | **Visualize** | **v1.0.0.** Optional visualization phase of `mitotree-agent`, run after `qc/mitotree-qc` (or any time after `build/mitot | `visualize/` | `$RUN_DIR/visualize-artifact.md` |
+*Mitogenome inputs merge into one trunk through preflight → build → QC; the dotted spur marks the optional concordance/ANI/RSCU reports; the dashed purple rail is the optional `biodb-fetch` dependency (shared data lake), feeding the taxon-sampling input — it falls back to user-supplied files when unavailable.*
+
+Phases run in order: **preflight → build → qc**. Everything else is optional and user-triggered.
+
+| # | Phase | What it does | Sub-skill | Artifact |
+|:--|:------|:-------------|:----------|:---------|
+| 1 | Preflight | Validate inputs (archives or per-gene FASTAs), gene coverage, tool audit; write `params.json` | `preflight/mitotree-preflight` | `preflight.md`, `params.json` |
+| 1a | Taxon sampling *(optional, pre-preflight)* | Fetch complete mitogenomes from NCBI (primary submissions), BLASTN-extract 13 PCGs + 12S/16S | `preflight/mitotree-taxon-sampling` | `taxon_sampling/genes/*.genes.fasta` |
+| 2 | Build | Extract → align (MAFFT) → trim (trimAl) → concatenate (AMAS) → species tree (IQ-TREE) → re-root | `build/mitotree-builder` | `build/species_tree.nwk` |
+| 3 | QC | Supermatrix stats, UFBoot support, folds in optional branch outputs below | `qc/mitotree-qc` | `qc-report.md` |
+| — | Concordance *(optional)* | Per-gene trees, RF distances, gCF/sCF; optional gCF-vs-sCF scatter figure | `concordance/mitotree-concordance` | `concordance/rf_distances.tsv`, `concordance.cf.stat` |
+| — | ANI *(optional)* | fastANI near-identity screen + heatmap | `ancillary/mitotree-ani` | `ani/fastani_results.tsv` |
+| — | Codon usage *(optional)* | RSCU (nucleotide-mode input only) | `ancillary/mitotree-codon-usage` | `codon_usage/rscu.tsv` |
+| — | Prune *(optional)* | Keep/exclude taxa, or diff against a reference tree | `prune/mitotree-prune` | `pruned/species_tree_pruned.nwk` |
+| — | Visualize *(optional)* | iTOL annotation datasets (italic labels, colorstrip), or offline SVG/PDF/PNG figure | `visualize/mitotree-itol`, `visualize/mitotree-render` | `itol/`, `figures/species_tree.{svg,pdf,png}` |
+| — | Debug *(on failure)* | Signature-library interpreter for stderr/exit codes | `debug/mitotree-debug` | `debug-report.md` |
+| — | Battle-test *(maintenance)* | Structural gate for the skill itself (frontmatter, docs-corpus, git hygiene) | `battle-test/mitotree-battle-test` | `battle-test-report.md` |
 
 > [!TIP]
 > Read each sub-skill's `SKILL.md` for the full procedure, its ask-user stop points, and its signature library (stderr pattern → cause → fix).
 
 ## 🧰 Tools
 
-All tools are resolved from conda-forge/bioconda via the pinned `pixi.toml`.
+All tools resolve from conda-forge/bioconda via `pixi.toml`; exact versions are locked in the committed `pixi.lock`.
 
-| Tool | Version | Role |
-|:-----|:--------|:-----|
-| `mafft` | * | Pinned conda dep |
-| `trimal` | * | Pinned conda dep |
-| `amas` | * | Pinned conda dep |
-| `iqtree` | * | Pinned conda dep |
-| `gotree` | * | Pinned conda dep |
-| `fastani` | * | Pinned conda dep |
-| `r-ape` | * | Pinned conda dep |
-| `r-getopt` | * | Pinned conda dep |
-| `pandas` | * | Pinned conda dep |
-| `numpy` | * | Pinned conda dep |
+| Tool | Role |
+|:-----|:-----|
+| `mafft` | Multiple sequence alignment |
+| `trimal` | Alignment trimming (gappy/gap-only columns) |
+| `amas` | Alignment statistics + supermatrix concatenation (`AMAS.py`) |
+| `iqtree` | Species/gene trees (IQ-TREE 2, UFBoot, gCF/sCF) |
+| `gotree` | Tree manipulation (prune, reroot, RF distance, tip stats) |
+| `r-ape` / `r-getopt` | R re-rooting of the species tree (build step) |
+| `fastani` | Average nucleotide identity (ANI) screen |
+| `blast` | `makeblastdb` + `blastn` gene extraction (taxon sampling) |
+| `entrez-direct` | E-utilities retrieval of NCBI mitogenome records |
+| `vsearch` | Near-duplicate collapse (`--cluster_fast`) |
+| `toytree` (+ `toyplot`) | Offline figure rendering |
+| `biopython` | FASTA parsing / RSCU calculation |
+| `pandas` / `numpy` / `scipy` | QC tables, heatmap clustering |
+| `matplotlib` | ANI heatmap |
 
-Tool usage is grounded in the offline `docs-corpus/` snapshots (version-matched `--help`/`man` captures, upstream repo docs, and web docs as fallback) — the agent reads these instead of guessing flags.
+Tool usage is grounded in the offline `docs-corpus/` snapshots (version-matched `--help` captures, upstream repo docs) — the agent reads these instead of guessing flags. The Python libraries above are imported directly and are not separately wrapped in `docs-corpus/`.
 
 ## 🔄 Update check
 
-Every skill built with [bioinfo-skill-creator](https://github.com/cheahhl814/bioinfo-skill-creator) ships a self-update check that compares the deployed git SHA against this upstream repo via `git fetch` — no GitHub API call, no extra dependencies.
+Every skill built with [skill-forge](https://github.com/cheahhl814/skill-forge) ships a self-update check that compares the deployed git SHA against this upstream repo via `git fetch` — no GitHub API call, no extra dependencies.
 
 ```bash
 pixi run update-check
@@ -137,30 +149,25 @@ pixi run update-check
 
 ```text
 mitotree-agent/
-├── SKILL.md                 # Master orchestrator (router — start here)
-├── README.md                # This file
-├── pixi.toml                # Pinned tool environment (pixi install)
-├── docs-corpus/             # Offline snapshots of upstream tool docs
-│   └── mafft/
-│   └── trimal/
-│   └── amas/
-│   └── iqtree/
-│   └── gotree/
-│   └── fastani/
-│   └── r-ape/
-│   └── r-getopt/
-│   └── pandas/
-│   └── numpy/
-├── ancillary/            # Phase sub-skill
-├── build/            # Phase sub-skill
-├── concordance/            # Phase sub-skill
-├── debug/            # Phase sub-skill
-├── preflight/            # Phase sub-skill
-├── prune/            # Phase sub-skill
+├── SKILL.md                  # Master orchestrator (router — start here)
+├── README.md                 # This file
+├── LICENSE                   # MIT
+├── pixi.toml                 # Tool dependencies (conda-forge/bioconda)
+├── pixi.lock                 # Locked resolutions (committed — do not hand-edit)
+├── params.json               # Build provenance (versions, tool inventory, sub-skills)
 ├── bin/
-│   └── skill-update-check.py  # Self-update check (pixi run update-check)
-└── bin/
-    └── scaffold-render.py     # Reproducibility — re-render the skill from params.json
+│   └── skill-update-check.py # Self-update check (pixi run update-check)
+├── docs-corpus/              # Offline snapshots: mafft, trimal, amas, iqtree, gotree,
+│                             #   fastani, blast, entrez-direct, vsearch, toytree
+├── preflight/                # mitotree-preflight (+ mitotree-taxon-sampling)
+├── build/                    # mitotree-builder
+├── qc/                       # mitotree-qc
+├── concordance/              # mitotree-concordance
+├── ancillary/                # mitotree-ani, mitotree-codon-usage
+├── prune/                    # mitotree-prune
+├── visualize/                # mitotree-itol, mitotree-render
+├── debug/                    # mitotree-debug
+└── battle-test/              # mitotree-battle-test (structural gate)
 ```
 
 ## 🔒 Hard guarantees
@@ -168,7 +175,7 @@ mitotree-agent/
 - **Filesystem evidence chain** — every phase emits the artifact the next phase consumes; the boundary between phases is the filesystem, not agent memory.
 - **Docs-grounded tool usage** — tool flags come from `docs-corpus/`, never from the agent's memory.
 - **Explicit stop points** — ambiguous decisions are surfaced to you as *Evidence + Recommend + Options*, not auto-picked.
-- **Reproducible environments** — every tool is pinned in `pixi.toml` and resolved via pixi.
+- **Reproducible environments** — tools resolve from `pixi.toml` and are pinned in the committed `pixi.lock`.
 
 ## 🚀 Nextflow runner
 
@@ -176,12 +183,14 @@ This skill does not currently ship a Nextflow runner. For cohort/HPC execution, 
 
 ## Provenance
 
-Built with the [bioinfo-skill-creator](https://github.com/cheahhl814/bioinfo-skill-creator) meta-skill (v1.1.0), following the AiX-BIO skill convention (preflight → build → debug → battle-test evidence chain). Pattern adopted from:
+Built with the [skill-forge](https://github.com/cheahhl814/skill-forge) meta-skill, following the AiX-BIO skill convention (preflight → build → debug → battle-test evidence chain). Pattern adopted from:
 
 - **BettaMt-agents** — https://github.com/cheahhl814/BettaMt-agents
 - **bacterial-genome-analysis** — https://github.com/cheahhl814/bacterial-genome-analysis
 - **amr-gene-screening** — https://github.com/cheahhl814/amr-gene-screening
 
+Divergence-time dating (MCMCtree/PAML) is deliberately out of scope — mitogenome-only data does not reliably calibrate node ages. Use a nuclear multi-locus or genome-scale dataset with MCMCtree instead.
+
 ## License
 
-Released under the MIT License — see the license file in this repository for details.
+MIT — see [LICENSE](LICENSE).

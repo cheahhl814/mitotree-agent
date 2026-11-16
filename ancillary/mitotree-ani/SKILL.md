@@ -1,8 +1,8 @@
 ---
 name: mitotree-ani
 description: 'Calculate Average Nucleotide Identity (ANI) between whole mitogenome sequences via fastANI, detect near-identical samples (>99% ANI), and generate a heatmap visualization. Independent of build/mitotree-builder — runs on whole mitogenome FASTAs after preflight. Triggers: "check ANI", "near-identical samples", "duplicate samples", "mitotree-ani".'
-version: 1.0.0
-updated: "2026-08-26"
+version: 1.2.0
+updated: "2026-11-16"
 triggers:
   - "check ANI"
   - "near-identical samples"
@@ -14,7 +14,7 @@ disable-model-invocation: true
 
 # mitotree-ani
 
-> **v1.0.0.** Optional ancillary branch of `mitotree-agent`, run any time after `preflight/mitotree-preflight` (before or after `build/mitotree-builder` / `qc/mitotree-qc`). Wraps `fastANI` (alignment-free ANI calculation) and a Python matplotlib heatmap — no R dependencies needed. Outputs feed into `qc/mitotree-qc`'s ANI section (`parse_ani()` reads `ani/fastani_results.tsv` exactly).
+> Optional ancillary branch of `mitotree-agent`, run any time after `preflight/mitotree-preflight` (before or after `build/mitotree-builder` / `qc/mitotree-qc`). Wraps `fastANI` (alignment-free ANI calculation) and a Python matplotlib heatmap — no R dependencies needed. Outputs feed into `qc/mitotree-qc`'s ANI section (`parse_ani()` reads `ani/fastani_results.tsv` exactly).
 
 ## When to Use This Skill
 

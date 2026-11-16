@@ -5,7 +5,7 @@ Rognes T, Flouri T, Nichols B, Quince C, Mahe F (2016)
 VSEARCH: a versatile open source tool for metagenomics
 PeerJ 4:e2584 doi: 10.7717/peerj.2584 https://doi.org/10.7717/peerj.2584
 
-Usage: /home/cheahhl814/claude_workspace/bioinformatics/AIx-BIO/skills/phylogenetics-agent/.pixi/envs/default/bin/vsearch [OPTIONS]
+Usage: vsearch [OPTIONS]
 
 For further details, please consult the manual by entering: man vsearch
 

@@ -1,8 +1,8 @@
 ---
 name: mitotree-render
 description: 'Render an offline, scriptable publication-format tree figure (SVG/PDF/PNG) from build/mitotree-builder''s species_tree.nwk, using toytree. The tree is already rooted by build/mitotree-builder -- --root-outgroup is available only as an optional override for exploring a different rooting, not required. Complements visualize/mitotree-itol (interactive, true italics). Triggers: "render the mitotree figure", "publication tree image", "export mitotree as PDF/SVG/PNG", "mitotree-render".'
-version: 1.0.0
-updated: "2026-08-26"
+version: 1.2.0
+updated: "2026-11-16"
 triggers:
   - "render the mitotree figure"
   - "publication tree image"
@@ -14,7 +14,7 @@ disable-model-invocation: true
 
 # mitotree-render
 
-> **v1.0.0.** Optional visualization phase of `mitotree-agent`, run after `qc/mitotree-qc` (or any time after `build/mitotree-builder` completes), alongside `visualize/mitotree-itol`. Ported from `phylogenetics-agent/visualize/phylo-render` — `render_tree.py` is copied unchanged (generic toytree wrapper). **Simplified vs. the original**: `phylo-render` roots on the outgroup itself because `phylo-builder` doesn't. `build/mitotree-builder` already writes a rerooted `species_tree.nwk`, so `--root-outgroup` here is only useful as an optional override (e.g. exploring an alternative rooting), not a required step.
+> Optional visualization phase of `mitotree-agent`, run after `qc/mitotree-qc` (or any time after `build/mitotree-builder` completes), alongside `visualize/mitotree-itol`. Ported from `phylogenetics-agent/visualize/phylo-render` — `render_tree.py` is copied unchanged (generic toytree wrapper). **Simplified vs. the original**: `phylo-render` roots on the outgroup itself because `phylo-builder` doesn't. `build/mitotree-builder` already writes a rerooted `species_tree.nwk`, so `--root-outgroup` here is only useful as an optional override (e.g. exploring an alternative rooting), not a required step.
 
 ## When to use this vs. `mitotree-itol`
 

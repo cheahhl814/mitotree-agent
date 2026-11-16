@@ -1,8 +1,8 @@
 ---
 name: mitotree-taxon-sampling
 description: 'Broaden a mitotree-agent dataset by fetching whole complete-mitogenome sequences from NCBI (same genus/family/etc., primary GenBank submissions only — RefSeq records excluded) plus an optional outgroup, then BLASTN-extract the 13 PCGs + 12S/16S rRNA against a reference gene set from the user''s own already-annotated data. Triggers: "add more mitogenomes", "pull mitogenomes from NCBI", "expand the mitotree dataset", "mitotree-taxon-sampling".'
-version: 1.1.0
-updated: "2026-09-08"
+version: 1.2.0
+updated: "2026-11-16"
 triggers:
   - "add more mitogenomes"
   - "pull mitogenomes from NCBI"
@@ -14,7 +14,7 @@ disable-model-invocation: true
 
 # mitotree-taxon-sampling
 
-> **v1.1.0.** Optional stage of `mitotree-agent`, run before `preflight/mitotree-preflight`. Two scripts: `fetch_mitogenomes.py` (NCBI retrieval, adapted from `phylogenetics-agent`'s `taxon_sampling.py`) and `blast_extract_genes.py` (BLASTN gene extraction, trimmed down from `PHYLOGENETIC/scripts/blast_extract_cds.py` to just its core homology-extraction logic, reference-loading reused directly from `build_supermatrix.py`).
+> Optional stage of `mitotree-agent`, run before `preflight/mitotree-preflight`. Two scripts: `fetch_mitogenomes.py` (NCBI retrieval, adapted from `phylogenetics-agent`'s `taxon_sampling.py`) and `blast_extract_genes.py` (BLASTN gene extraction, trimmed down from `PHYLOGENETIC/scripts/blast_extract_cds.py` to just its core homology-extraction logic, reference-loading reused directly from `build_supermatrix.py`).
 >
 > **Primary-submission-only (v1.1.0):** RefSeq records (`NC_`/`NG_`-style accessions) are **excluded**, not preferred. The esearch query carries `NOT srcdb_refseq[PROP]` and a post-fetch guard drops any straggler, logging it in `metadata.csv` with `drop_reason=refseq_excluded`. When a primary submission and its byte-identical RefSeq mirror both exist, the **primary accession is the one kept**. Type material still outranks ordinary primary submissions in the quality ranking.
 

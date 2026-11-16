@@ -1,8 +1,8 @@
 ---
 name: mitotree-codon-usage
 description: 'Calculate Relative Synonymous Codon Usage (RSCU) for nucleotide CDS sequences via calculate_rscu.py. Informational only — no QC flags. Nucleotide mode only (meaningless on amino-acid input). Triggers: "codon usage", "RSCU", "codon bias", "mitotree-codon-usage".'
-version: 1.0.0
-updated: "2026-08-26"
+version: 1.2.0
+updated: "2026-11-16"
 triggers:
   - "codon usage"
   - "RSCU"
@@ -13,7 +13,7 @@ disable-model-invocation: true
 
 # mitotree-codon-usage
 
-> **v1.0.0.** Optional ancillary branch of `mitotree-agent`, run any time after `build/mitotree-builder` has produced per-gene nucleotide FASTAs (`build/01_per_gene/<gene>.fasta`). Wraps `calculate_rscu.py` (direct port from the original MitoTree Nextflow pipeline's `bin/calculate_rscu.py`). Outputs are **informational only** — `qc/mitotree-qc/scripts/qc_report.py` does NOT currently read codon-usage output (no QC flags), so this branch is purely for user interest.
+> Optional ancillary branch of `mitotree-agent`, run any time after `build/mitotree-builder` has produced per-gene nucleotide FASTAs (`build/01_per_gene/<gene>.fasta`). Wraps `calculate_rscu.py` (direct port from the original MitoTree Nextflow pipeline's `bin/calculate_rscu.py`). Outputs are **informational only** — `qc/mitotree-qc/scripts/qc_report.py` does NOT currently read codon-usage output (no QC flags), so this branch is purely for user interest.
 
 ## When to Use This Skill
 

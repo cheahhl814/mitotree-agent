@@ -1,8 +1,8 @@
 ---
 name: mitotree-battle-test
 description: 'Structural quality gate for mitotree-agent: frontmatter coherence across all SKILL.md files, sub-skill contract wiring, signature-library completeness, docs-corpus population for all tools, pixi.toml resolution, and (opt-in) an execution smoke test on a tiny synthetic dataset. Writes battle-test-report.md. Triggers: "battle-test mitotree-agent", "mitotree-battle-test", "is the mitotree skill ready".'
-version: 1.0.0
-updated: "2026-08-26"
+version: 1.2.0
+updated: "2026-11-16"
 triggers:
   - "battle-test mitotree-agent"
   - "mitotree-battle-test"
@@ -12,7 +12,7 @@ disable-model-invocation: true
 
 # mitotree-battle-test
 
-> **v1.0.0.** Quality gate for `mitotree-agent`. Mirrors `phylo-battle-test`'s structural-check pattern. Never modifies the skill — read-only checks plus one opt-in execution smoke test.
+> Quality gate for `mitotree-agent`. Mirrors `phylo-battle-test`'s structural-check pattern. Never modifies the skill — read-only checks plus one opt-in execution smoke test.
 
 ## 0. Inputs / Outputs contract
 

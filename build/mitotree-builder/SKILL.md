@@ -1,8 +1,8 @@
 ---
 name: mitotree-builder
 description: 'Build the mitogenome supermatrix (extract PCGs+rRNA, align with mafft, trim with trimAl, concatenate with AMAS) and species tree (IQ-TREE, GTR+G or LG+G, 1000 UFBoot), then optionally re-root on an outgroup via ape. Checkpointed across 3 stages for resume. Triggers: internal — invoked by mitotree-agent orchestrator only.'
-version: 1.0.0
-updated: "2026-08-26"
+version: 1.2.0
+updated: "2026-11-16"
 triggers:
   - "mitotree build"
 disable-model-invocation: true
@@ -10,7 +10,7 @@ disable-model-invocation: true
 
 # mitotree-builder
 
-> **v1.0.0.** Phase 2 of `mitotree-agent`. Wraps `build_supermatrix.py` (extract → align → trim → concat → stats, live-verified against a synthetic 4-taxon/3-gene dataset), `iqtree` (species tree), and `reroot_tree.R` (ape-based re-rooting, live-verified).
+> Phase 2 of `mitotree-agent`. Wraps `build_supermatrix.py` (extract → align → trim → concat → stats, live-verified against a synthetic 4-taxon/3-gene dataset), `iqtree` (species tree), and `reroot_tree.R` (ape-based re-rooting, live-verified).
 
 ## 0. Inputs / Outputs contract
 

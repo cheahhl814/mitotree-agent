@@ -16,9 +16,22 @@ __pycache__/
 # Docs-corpus fingerprints (regenerable)
 docs-corpus/.fingerprints
 
-# Pixi
+# Pixi (pixi.lock is committed for reproducibility)
 .pixi/
-pixi.lock
 
 # Run-time checkpoints (per-run artifacts, not part of the skill itself)
 checkpoints/
+
+# Editor/indexer state
+.codebase-index/
+
+# Battle-test / phase run artifacts (skill-forge runbook)
+skill-built.md
+battle-test-report.md
+battle-test_evidence.txt
+preflight.md
+preflight_evidence.txt
+tool_search_results.txt
+exec-canary-report.md
+exec-canary_evidence.txt
+.battle-test-scratch/

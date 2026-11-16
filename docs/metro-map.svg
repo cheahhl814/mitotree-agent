@@ -1,0 +1,109 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 740" role="img" aria-label="mitotree-agent pipeline metro map: MitoAnnotator archives and per-gene FASTAs merge at preflight (params.json), run through extract, mafft, trimal, AMAS, IQ-TREE and reroot to species_tree.nwk, then qc_report.py writes qc-report.md; a dotted optional spur produces concordance, ANI and RSCU TSV reports; a dashed purple rail from the biodb-fetch band feeds the taxon-sampling input of preflight" width="1280" height="740">
+<title>mitotree-agent pipeline metro map (biodb-fetch feeds the taxon-sampling input)</title>
+<rect width="1280" height="740" fill="#ffffff"/>
+<rect x="20" y="70" width="280" height="430" rx="14" fill="#f8fafc" stroke="#e2e8f0" stroke-width="1.5"/>
+<circle cx="34" cy="40" r="13" fill="#0f172a"/>
+<text x="34" y="45.5" text-anchor="middle" style="font-family:system-ui,-apple-system,'Segoe UI',sans-serif;font-size:15px;font-weight:700;fill:#ffffff">1</text>
+<text x="56" y="47" text-anchor="start" style="font-family:system-ui,-apple-system,'Segoe UI',sans-serif;font-size:22px;font-weight:700;fill:#0f172a">Preflight</text>
+<rect x="320" y="70" width="690" height="430" rx="14" fill="#f8fafc" stroke="#e2e8f0" stroke-width="1.5"/>
+<circle cx="334" cy="40" r="13" fill="#0f172a"/>
+<text x="334" y="45.5" text-anchor="middle" style="font-family:system-ui,-apple-system,'Segoe UI',sans-serif;font-size:15px;font-weight:700;fill:#ffffff">2</text>
+<text x="356" y="47" text-anchor="start" style="font-family:system-ui,-apple-system,'Segoe UI',sans-serif;font-size:22px;font-weight:700;fill:#0f172a">Build</text>
+<rect x="1030" y="70" width="232" height="430" rx="14" fill="#f8fafc" stroke="#e2e8f0" stroke-width="1.5"/>
+<circle cx="1044" cy="40" r="13" fill="#0f172a"/>
+<text x="1044" y="45.5" text-anchor="middle" style="font-family:system-ui,-apple-system,'Segoe UI',sans-serif;font-size:15px;font-weight:700;fill:#ffffff">3</text>
+<text x="1066" y="47" text-anchor="start" style="font-family:system-ui,-apple-system,'Segoe UI',sans-serif;font-size:22px;font-weight:700;fill:#0f172a">QC &amp; report</text>
+<path d="M 895 290 V 400 Q 895 420 915 420 H 940" fill="none" stroke="#10b981" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="1 9"/>
+<path d="M 90 205 H 110 C 160 205 150 284 200 284 H 1170" fill="none" stroke="#0d9488" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" />
+<path d="M 90 375 H 110 C 160 375 150 296 200 296 H 1170" fill="none" stroke="#f59e0b" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" />
+<rect x="78" y="191" width="6" height="28" rx="1.5" fill="#0f172a"/>
+<rect x="78" y="361" width="6" height="28" rx="1.5" fill="#0f172a"/>
+<path d="M 28 183 h 24 l 10 10 v 34 h -34 z" transform="translate(4 4)" fill="#cbd5e1" stroke="#94a3b8" stroke-width="1.5"/>
+<path d="M 28 183 h 24 l 10 10 v 34 h -34 z" fill="#ffffff" stroke="#0f172a" stroke-width="2" stroke-linejoin="round"/>
+<path d="M 52 183 v 10 h 10" fill="none" stroke="#0f172a" stroke-width="2" stroke-linejoin="round"/>
+<rect x="14.0" y="202.0" width="62" height="17" rx="3.5" fill="#0f172a"/>
+<text x="45.0" y="214.5" text-anchor="middle" style="font-family:system-ui,-apple-system,'Segoe UI',sans-serif;font-size:11px;font-weight:700;fill:#ffffff">TAR.GZ</text>
+<path d="M 28 353 h 24 l 10 10 v 34 h -34 z" transform="translate(4 4)" fill="#cbd5e1" stroke="#94a3b8" stroke-width="1.5"/>
+<path d="M 28 353 h 24 l 10 10 v 34 h -34 z" fill="#ffffff" stroke="#0f172a" stroke-width="2" stroke-linejoin="round"/>
+<path d="M 52 353 v 10 h 10" fill="none" stroke="#0f172a" stroke-width="2" stroke-linejoin="round"/>
+<rect x="18.0" y="372.0" width="54" height="17" rx="3.5" fill="#0f172a"/>
+<text x="45.0" y="384.5" text-anchor="middle" style="font-family:system-ui,-apple-system,'Segoe UI',sans-serif;font-size:11px;font-weight:700;fill:#ffffff">FASTA</text>
+<text x="28" y="246" text-anchor="start" style="font-family:system-ui,-apple-system,'Segoe UI',sans-serif;font-size:12px;font-weight:600;fill:#0f172a">A · MitoAnnotator</text>
+<text x="28" y="262" text-anchor="start" style="font-family:system-ui,-apple-system,'Segoe UI',sans-serif;font-size:12px;font-weight:400;fill:#64748b">archives</text>
+<text x="28" y="416" text-anchor="start" style="font-family:system-ui,-apple-system,'Segoe UI',sans-serif;font-size:12px;font-weight:600;fill:#0f172a">B · per-species</text>
+<text x="28" y="432" text-anchor="start" style="font-family:system-ui,-apple-system,'Segoe UI',sans-serif;font-size:12px;font-weight:400;fill:#64748b">per-gene FASTAs</text>
+<rect x="168" y="318" width="88" height="22" rx="5" fill="#0f172a"/>
+<text x="212" y="333.5" text-anchor="middle" style="font-family:system-ui,-apple-system,'Segoe UI',sans-serif;font-size:12px;font-weight:700;fill:#ffffff">params.json</text>
+<rect x="253" y="270" width="10" height="40" rx="5" fill="#ffffff" stroke="#0f172a" stroke-width="2"/>
+<text x="258" y="232" text-anchor="middle" style="font-family:system-ui,-apple-system,'Segoe UI',sans-serif;font-size:12px;font-weight:400;fill:#64748b">gate</text>
+<text x="258" y="250" text-anchor="middle" style="font-family:system-ui,-apple-system,'Segoe UI',sans-serif;font-size:13px;font-weight:700;fill:#0f172a">preflight</text>
+<rect x="380" y="270" width="10" height="40" rx="5" fill="#ffffff" stroke="#0f172a" stroke-width="2"/>
+<text x="385" y="232" text-anchor="middle" style="font-family:system-ui,-apple-system,'Segoe UI',sans-serif;font-size:12px;font-weight:400;fill:#64748b">PCG + rRNA</text>
+<text x="385" y="250" text-anchor="middle" style="font-family:system-ui,-apple-system,'Segoe UI',sans-serif;font-size:13px;font-weight:700;fill:#0f172a">extract</text>
+<rect x="470" y="270" width="10" height="40" rx="5" fill="#ffffff" stroke="#0f172a" stroke-width="2"/>
+<text x="475" y="334" text-anchor="middle" style="font-family:system-ui,-apple-system,'Segoe UI',sans-serif;font-size:13px;font-weight:700;fill:#0f172a">mafft</text>
+<text x="475" y="350" text-anchor="middle" style="font-family:system-ui,-apple-system,'Segoe UI',sans-serif;font-size:12px;font-weight:400;fill:#64748b">align</text>
+<rect x="560" y="270" width="10" height="40" rx="5" fill="#ffffff" stroke="#0f172a" stroke-width="2"/>
+<text x="565" y="232" text-anchor="middle" style="font-family:system-ui,-apple-system,'Segoe UI',sans-serif;font-size:12px;font-weight:400;fill:#64748b">trim</text>
+<text x="565" y="250" text-anchor="middle" style="font-family:system-ui,-apple-system,'Segoe UI',sans-serif;font-size:13px;font-weight:700;fill:#0f172a">trimal</text>
+<rect x="650" y="270" width="10" height="40" rx="5" fill="#ffffff" stroke="#0f172a" stroke-width="2"/>
+<text x="655" y="334" text-anchor="middle" style="font-family:system-ui,-apple-system,'Segoe UI',sans-serif;font-size:13px;font-weight:700;fill:#0f172a">AMAS</text>
+<text x="655" y="350" text-anchor="middle" style="font-family:system-ui,-apple-system,'Segoe UI',sans-serif;font-size:12px;font-weight:400;fill:#64748b">concat</text>
+<rect x="740" y="270" width="10" height="40" rx="5" fill="#ffffff" stroke="#0f172a" stroke-width="2"/>
+<text x="745" y="232" text-anchor="middle" style="font-family:system-ui,-apple-system,'Segoe UI',sans-serif;font-size:12px;font-weight:400;fill:#64748b">species tree</text>
+<text x="745" y="250" text-anchor="middle" style="font-family:system-ui,-apple-system,'Segoe UI',sans-serif;font-size:13px;font-weight:700;fill:#0f172a">IQ-TREE</text>
+<rect x="830" y="270" width="10" height="40" rx="5" fill="#ffffff" stroke="#0f172a" stroke-width="2"/>
+<text x="835" y="334" text-anchor="middle" style="font-family:system-ui,-apple-system,'Segoe UI',sans-serif;font-size:13px;font-weight:700;fill:#0f172a">reroot</text>
+<text x="835" y="350" text-anchor="middle" style="font-family:system-ui,-apple-system,'Segoe UI',sans-serif;font-size:12px;font-weight:400;fill:#64748b">outgroup</text>
+<path d="M 950 268 h 24 l 10 10 v 34 h -34 z" transform="translate(4 4)" fill="#cbd5e1" stroke="#94a3b8" stroke-width="1.5"/>
+<path d="M 950 268 h 24 l 10 10 v 34 h -34 z" fill="#ffffff" stroke="#0f172a" stroke-width="2" stroke-linejoin="round"/>
+<path d="M 974 268 v 10 h 10" fill="none" stroke="#0f172a" stroke-width="2" stroke-linejoin="round"/>
+<rect x="948.0" y="287.0" width="38" height="17" rx="3.5" fill="#0f172a"/>
+<text x="967.0" y="299.5" text-anchor="middle" style="font-family:system-ui,-apple-system,'Segoe UI',sans-serif;font-size:11px;font-weight:700;fill:#ffffff">NWK</text>
+<text x="967" y="345" text-anchor="middle" style="font-family:system-ui,-apple-system,'Segoe UI',sans-serif;font-size:12px;font-weight:600;fill:#0f172a">species_tree.nwk</text>
+<rect x="1095" y="270" width="10" height="40" rx="5" fill="#ffffff" stroke="#0f172a" stroke-width="2"/>
+<text x="1100" y="232" text-anchor="middle" style="font-family:system-ui,-apple-system,'Segoe UI',sans-serif;font-size:12px;font-weight:400;fill:#64748b">report</text>
+<text x="1100" y="250" text-anchor="middle" style="font-family:system-ui,-apple-system,'Segoe UI',sans-serif;font-size:13px;font-weight:700;fill:#0f172a">qc_report.py</text>
+<rect x="1168" y="276" width="6" height="28" rx="1.5" fill="#0f172a"/>
+<path d="M 1186 268 h 24 l 10 10 v 34 h -34 z" transform="translate(4 4)" fill="#cbd5e1" stroke="#94a3b8" stroke-width="1.5"/>
+<path d="M 1186 268 h 24 l 10 10 v 34 h -34 z" fill="#ffffff" stroke="#0f172a" stroke-width="2" stroke-linejoin="round"/>
+<path d="M 1210 268 v 10 h 10" fill="none" stroke="#0f172a" stroke-width="2" stroke-linejoin="round"/>
+<rect x="1188.0" y="287.0" width="30" height="17" rx="3.5" fill="#0f172a"/>
+<text x="1203.0" y="299.5" text-anchor="middle" style="font-family:system-ui,-apple-system,'Segoe UI',sans-serif;font-size:11px;font-weight:700;fill:#ffffff">MD</text>
+<text x="1203" y="345" text-anchor="middle" style="font-family:system-ui,-apple-system,'Segoe UI',sans-serif;font-size:12px;font-weight:600;fill:#0f172a">qc-report.md</text>
+<text x="1146" y="400" text-anchor="middle" style="font-family:system-ui,-apple-system,'Segoe UI',sans-serif;font-size:12px;font-weight:400;fill:#64748b">UFBoot support · RF · gCF/sCF</text>
+<circle cx="920" cy="420" r="0"/>
+<path d="M 945 398 h 24 l 10 10 v 34 h -34 z" transform="translate(4 4)" fill="#cbd5e1" stroke="#94a3b8" stroke-width="1.5"/>
+<path d="M 945 398 h 24 l 10 10 v 34 h -34 z" fill="#ffffff" stroke="#0f172a" stroke-width="2" stroke-linejoin="round"/>
+<path d="M 969 398 v 10 h 10" fill="none" stroke="#0f172a" stroke-width="2" stroke-linejoin="round"/>
+<rect x="943.0" y="417.0" width="38" height="17" rx="3.5" fill="#0f172a"/>
+<text x="962.0" y="429.5" text-anchor="middle" style="font-family:system-ui,-apple-system,'Segoe UI',sans-serif;font-size:11px;font-weight:700;fill:#ffffff">TSV</text>
+<text x="800" y="470" text-anchor="middle" style="font-family:system-ui,-apple-system,'Segoe UI',sans-serif;font-size:12px;font-weight:600;fill:#0f172a">optional: concordance · ANI · RSCU</text>
+<circle cx="895" cy="400" r="6" fill="#fff" stroke="#0f172a" stroke-width="2.5"/>
+<!-- optional dependency band: biodb-fetch (shared data lake) -->
+<rect x="20" y="516" width="1240" height="64" rx="12" fill="#f5f3ff" stroke="#7c3aed" stroke-width="2" stroke-dasharray="7 5"/>
+<path d="M 34 535 a13 5.5 0 0 1 26 0 v 22 a13 5.5 0 0 1 -26 0 z" fill="#ffffff" stroke="#7c3aed" stroke-width="2"/>
+<ellipse cx="47" cy="535" rx="13" ry="5.5" fill="#ffffff" stroke="#7c3aed" stroke-width="2"/>
+<text x="76" y="541" style="font-family:system-ui,-apple-system,'Segoe UI',sans-serif;font-size:14px;font-weight:700;fill:#4c1d95">biodb-fetch — shared data lake</text>
+<text x="76" y="563" style="font-family:system-ui,-apple-system,'Segoe UI',sans-serif;font-size:11.5px;font-weight:400;fill:#5b21b6">optional dependency · NCBI nucleotide retrieval for taxon sampling &amp; marker fetch · dedup&#8217;d store (contract v2) · falls back to user-supplied files when unavailable</text>
+<rect x="1136" y="538" width="92" height="20" rx="10" fill="#7c3aed"/>
+<text x="1182" y="552.5" text-anchor="middle" style="font-family:system-ui,-apple-system,'Segoe UI',sans-serif;font-size:11px;font-weight:700;letter-spacing:1px;fill:#ffffff">OPTIONAL</text>
+<!-- dependency rail: biodb-fetch -> taxon-sampling input (B) -->
+<path d="M 168 516 V 456" fill="none" stroke="#7c3aed" stroke-width="2.5" stroke-dasharray="6 4" stroke-linecap="round"/>
+<path d="M 168 446 L 161 460 L 175 460 Z" fill="#7c3aed"/>
+<text x="182" y="482" style="font-family:system-ui,-apple-system,'Segoe UI',sans-serif;font-size:12px;font-weight:600;fill:#5b21b6">taxon sampling (optional)</text>
+<!-- legend (two rows) -->
+<text x="40" y="622" style="font-family:system-ui,-apple-system,'Segoe UI',sans-serif;font-size:11px;font-weight:700;letter-spacing:1.2px;fill:#64748b">LEGEND</text>
+<path d="M 42 654 H 78" fill="none" stroke="#0d9488" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" />
+<path d="M 42 664 H 78" fill="none" stroke="#f59e0b" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" />
+<text x="90" y="663" text-anchor="start" style="font-family:system-ui,-apple-system,'Segoe UI',sans-serif;font-size:12px;font-weight:400;fill:#0f172a">solid line = core pipeline (teal: archives A, amber: FASTAs B)</text>
+<path d="M 585 659 H 621" fill="none" stroke="#10b981" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="1 9"/>
+<text x="635" y="663" text-anchor="start" style="font-family:system-ui,-apple-system,'Segoe UI',sans-serif;font-size:12px;font-weight:400;fill:#0f172a">dotted = optional reports</text>
+<rect x="42" y="678" width="10" height="28" rx="5" fill="#ffffff" stroke="#0f172a" stroke-width="2"/>
+<text x="66" y="697" text-anchor="start" style="font-family:system-ui,-apple-system,'Segoe UI',sans-serif;font-size:12px;font-weight:400;fill:#0f172a">capsule = shared station</text>
+<rect x="320" y="684" width="88" height="22" rx="5" fill="#0f172a"/>
+<text x="364" y="699" text-anchor="middle" style="font-family:system-ui,-apple-system,'Segoe UI',sans-serif;font-size:12px;font-weight:700;fill:#ffffff">params.json</text>
+<text x="418" y="697" text-anchor="start" style="font-family:system-ui,-apple-system,'Segoe UI',sans-serif;font-size:12px;font-weight:400;fill:#0f172a">= tag</text>
+<path d="M 560 690 H 600" fill="none" stroke="#7c3aed" stroke-width="2.5" stroke-linecap="round" stroke-dasharray="6 4"/>
+<text x="612" y="697" text-anchor="start" style="font-family:system-ui,-apple-system,'Segoe UI',sans-serif;font-size:12px;font-weight:400;fill:#0f172a">dashed purple = optional dependency (biodb-fetch)</text>
+</svg>

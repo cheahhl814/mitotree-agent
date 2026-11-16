@@ -2,7 +2,7 @@
 """Render a publication-format tree figure (SVG/PDF/PNG) from a Newick file using toytree.
 
 Offline, scriptable, no browser or upload step — the complement to
-visualize/phylo-itol (which produces interactive iTOL annotation datasets
+visualize/mitotree-itol (which produces interactive iTOL annotation datasets
 instead of a static figure). Support values are auto-detected from internal
 node labels (works with both IQ-TREE ultrafast-bootstrap .treefile and
 RAxML-NG .raxml.supportFBP/supportTBE outputs).
@@ -17,7 +17,7 @@ KNOWN LIMITATION: tip labels are NOT italicized. toyplot 2.1.0's CSS-style
 validator rejects `font-style` even though its own PDF renderer supports it
 (a real inconsistency in the library, confirmed while building this script —
 not a workaround-able flag). If italic species names matter for the figure,
-use visualize/phylo-itol instead: upload the tree to itol.embl.de with the
+use visualize/mitotree-itol instead: upload the tree to itol.embl.de with the
 generated label-style dataset, which renders true italics, then export from
 there.
 """
@@ -68,7 +68,7 @@ def main():
             except Exception:
                 # toytree hard-errors on a non-monophyletic outgroup (unlike gotree, which
                 # warns and reroots at the outgroup's LCA anyway) -- fall back to that same
-                # LCA behavior so phylo-render and phylo-itol agree on the rooting.
+                # LCA behavior so mitotree-render and mitotree-itol agree on the rooting.
                 try:
                     mrca = tree.get_mrca_node(*matched)
                     tree = tree.root(mrca)

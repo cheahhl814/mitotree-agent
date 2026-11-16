@@ -1,8 +1,8 @@
 ---
 name: mitotree-preflight
 description: 'Validate inputs for mitotree-agent: MitoAnnotator .tar.gz archives and/or per-species gene FASTAs, mode (nt/aa), outgroup, gene coverage, and tool audit (mafft/trimal/amas/iqtree/gotree). Writes preflight.md + params.json. Triggers: internal — invoked by mitotree-agent orchestrator only.'
-version: 1.0.0
-updated: "2026-08-26"
+version: 1.2.0
+updated: "2026-11-16"
 triggers:
   - "mitotree preflight"
 disable-model-invocation: true
@@ -10,7 +10,7 @@ disable-model-invocation: true
 
 # mitotree-preflight
 
-> **v1.0.0.** Phase 1 of `mitotree-agent`. Validates the mitogenome gene-set inputs and tool availability before the expensive multi-gene alignment/tree build runs.
+> Phase 1 of `mitotree-agent`. Validates the mitogenome gene-set inputs and tool availability before the expensive multi-gene alignment/tree build runs.
 
 ## 0. Inputs / Outputs contract
 

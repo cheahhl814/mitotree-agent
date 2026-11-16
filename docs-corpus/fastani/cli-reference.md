@@ -7,7 +7,7 @@ $ fastANI -q genome1.fa --rl genome_list.txt -o output.txt
 
 SYNOPSIS
 --------
-/home/cheahhl814/claude_workspace/bioinformatics/AIx-BIO/skills/mitotree-agent/.pixi/envs/default/bin/fastANI
+fastANI
     [-h] [-r <value>] [--rl <value>] [-q <value>] [--ql <value>] [-k <value>]
     [-t <value>] [--fragLen <value>] [--minFraction <value>] [--maxRatioDiff
     <value>] [--visualize] [--matrix] [-o <value>] [-s] [-v]

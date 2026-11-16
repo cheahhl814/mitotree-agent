@@ -1,8 +1,8 @@
 ---
 name: mitotree-debug
 description: 'Failure interpreter for mitotree-agent: matches stderr/exit-code signatures from preflight, build, concordance, ani, codon-usage, or qc against a signature library and recommends a fix. Triggers: "mitotree failed", "why did the build error", "debug mitotree".'
-version: 1.0.0
-updated: "2026-08-26"
+version: 1.2.0
+updated: "2026-11-16"
 triggers:
   - "mitotree failed"
   - "why did the mitotree build error"
@@ -12,7 +12,7 @@ disable-model-invocation: true
 
 # mitotree-debug
 
-> **v1.0.0.** Cross-phase failure interpreter for `mitotree-agent`. Each phase sub-skill has its own local signature library (see their `## Troubleshooting` sections); this skill is the aggregator for when the failing phase isn't obvious yet.
+> Cross-phase failure interpreter for `mitotree-agent`. Each phase sub-skill has its own local signature library (see their `## Troubleshooting` sections); this skill is the aggregator for when the failing phase isn't obvious yet.
 
 ## 0. Inputs / Outputs contract
 

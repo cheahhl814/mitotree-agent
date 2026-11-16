@@ -1,7 +1,7 @@
 {
   "skill_name": "mitotree-agent",
-  "skill_version": "1.0.0",
-  "skill_updated": "2026-08-26",
+  "skill_version": "1.2.0",
+  "skill_updated": "2026-11-16",
   "skill_short_description": "Agentic mitogenome phylogenomics pipeline (multi-gene supermatrix -- extract PCGs+rRNA, align, trim, concatenate, species tree) with optional gene-tree concordance, ANI, and codon-usage branches. Rebuilt from the MitoTree Nextflow pipeline as a checkpointed BettaMt-pattern skill. Deliberately excludes divergence-time dating (MCMCtree/PAML) -- unreliable from mitogenome-only data.",
   "skill_description": "Agentic mitogenome phylogenomics pipeline (multi-gene supermatrix -- extract PCGs+rRNA, align, trim, concatenate, species tree) with optional gene-tree concordance, ANI, and codon-usage branches. Rebuilt from the MitoTree Nextflow pipeline as a checkpointed BettaMt-pattern skill. Deliberately excludes divergence-time dating (MCMCtree/PAML) -- unreliable from mitogenome-only data.",
   "skill_triggers": [
@@ -16,42 +16,42 @@
   "sub_skills": [
     {
       "name": "ancillary",
-      "purpose": "**v1.0.0.** Optional ancillary branch of `mitotree-agent`, run any time after `preflight/mitotree-preflight` (before or",
+      "purpose": "Optional ancillary branch of `mitotree-agent`, run any time after `preflight/mitotree-preflight` (before or",
       "artifact": "ancillary-artifact.md"
     },
     {
       "name": "build",
-      "purpose": "**v1.0.0.** Phase 2 of `mitotree-agent`. Wraps `build_supermatrix.py` (extract \u2192 align \u2192 trim \u2192 concat \u2192 stats, live-ver",
+      "purpose": "Phase 2 of `mitotree-agent`. Wraps `build_supermatrix.py` (extract → align → trim → concat → stats, live-ver",
       "artifact": "run-summary.md"
     },
     {
       "name": "concordance",
-      "purpose": "**v1.0.0.** Optional post-build stage of `mitotree-agent`, run after `build/mitotree-builder` completes (`checkpoints/tr",
+      "purpose": "Optional post-build stage of `mitotree-agent`, run after `build/mitotree-builder` completes (`checkpoints/tr",
       "artifact": "concordance-artifact.md"
     },
     {
       "name": "debug",
-      "purpose": "**v1.0.0.** Cross-phase failure interpreter for `mitotree-agent`. Each phase sub-skill has its own local signature libra",
+      "purpose": "Cross-phase failure interpreter for `mitotree-agent`. Each phase sub-skill has its own local signature libra",
       "artifact": "debug-report.md"
     },
     {
       "name": "preflight",
-      "purpose": "**v1.0.0.** Phase 1 of `mitotree-agent`. Validates the mitogenome gene-set inputs and tool availability before the expen",
+      "purpose": "Phase 1 of `mitotree-agent`. Validates the mitogenome gene-set inputs and tool availability before the expen",
       "artifact": "preflight.md"
     },
     {
       "name": "prune",
-      "purpose": "**v1.0.0.** Optional stage of `mitotree-agent`, run after `build/mitotree-builder` (before or alongside `visualize/mitot",
+      "purpose": "Optional stage of `mitotree-agent`, run after `build/mitotree-builder` (before or alongside `visualize/mitot",
       "artifact": "prune-artifact.md"
     },
     {
       "name": "qc",
-      "purpose": "**v1.0.0.** Phase 3 of `mitotree-agent`. Wraps `qc_report.py` (live-verified: gracefully reports \"not found\" per section",
+      "purpose": "Phase 3 of `mitotree-agent`. Wraps `qc_report.py` (live-verified: gracefully reports \"not found\" per section",
       "artifact": "qc-summary.md"
     },
     {
       "name": "visualize",
-      "purpose": "**v1.0.0.** Optional visualization phase of `mitotree-agent`, run after `qc/mitotree-qc` (or any time after `build/mitot",
+      "purpose": "Optional visualization phase of `mitotree-agent`, run after `qc/mitotree-qc` (or any time after `build/mitot",
       "artifact": "visualize-artifact.md"
     }
   ],
